@@ -142,7 +142,9 @@ app.config["MAIL_DEFAULT_SENDER"] = os.getenv(
 
 # Inicializar extensiones
 db.init_app(app)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")
+socketio = SocketIO(
+    app, cors_allowed_origins="*", async_mode="threading", manage_session=False
+)
 mail = Mail(app)
 
 logger.info("[OK] Flask app inicializada correctamente")
