@@ -924,10 +924,12 @@ def forgot_password():
         try:
             if app.config["MAIL_USERNAME"] and app.config["MAIL_PASSWORD"]:
                 logger.info(f"[MAIL] Intentando enviar email a {email}")
-                logger.info(f"[MAIL] Servidor: {app.config['MAIL_SERVER']}:{app.config['MAIL_PORT']}")
+                logger.info(
+                    f"[MAIL] Servidor: {app.config['MAIL_SERVER']}:{app.config['MAIL_PORT']}"
+                )
                 logger.info(f"[MAIL] Usuario: {app.config['MAIL_USERNAME']}")
                 logger.info(f"[MAIL] TLS: {app.config['MAIL_USE_TLS']}")
-                
+
                 # Leer la plantilla HTML
                 with open(
                     "templates/emails/reset_password.html", "r", encoding="utf-8"
@@ -942,7 +944,7 @@ def forgot_password():
                     recipients=[email],
                     html=html_content,
                 )
-                
+
                 # Intentar enviar con timeout
                 mail.send(msg)
                 logger.info(f"[MAIL] ✅ Email enviado exitosamente a {email}")
@@ -954,12 +956,14 @@ def forgot_password():
             error_detail = str(e)
             logger.error(f"[MAIL] ❌ Error al enviar email: {error_detail}")
             logger.error(f"[MAIL] Traceback: {traceback.format_exc()}")
-            
+
             # Diagnóstico adicional
             if "Authentication" in error_detail or "535" in error_detail:
                 logger.error("[MAIL] 🔴 Error de autenticación - Verifica:")
                 logger.error("[MAIL]   1. MAIL_USERNAME es correcto")
-                logger.error("[MAIL]   2. MAIL_PASSWORD es una App Password de Gmail (no tu contraseña normal)")
+                logger.error(
+                    "[MAIL]   2. MAIL_PASSWORD es una App Password de Gmail (no tu contraseña normal)"
+                )
                 logger.error("[MAIL]   3. Verificación en 2 pasos activada en Gmail")
             elif "Connection" in error_detail or "timeout" in error_detail.lower():
                 logger.error("[MAIL] 🔴 Error de conexión - Verifica:")
@@ -971,7 +975,9 @@ def forgot_password():
         if not email_sent:
             logger.warning(f"[MAIL] 📧 BACKUP - Link de recuperacion para {email}:")
             logger.warning(f"[MAIL] {reset_link}")
-            logger.warning(f"[MAIL] Motivo: {error_detail or 'Configuracion no disponible'}")
+            logger.warning(
+                f"[MAIL] Motivo: {error_detail or 'Configuracion no disponible'}"
+            )
 
         return (
             jsonify(
@@ -2557,16 +2563,17 @@ print("[OK] Sistema de limpieza automatica de mensajes iniciado")
 
 # ==================== DIAGNÓSTICO DE CORREO (SOLO ADMIN) ====================
 
+
 @app.route("/admin/test-email")
 def test_email_config():
     """Ruta de diagnóstico para probar configuración de correo (solo admin)"""
     if "user_id" not in session:
         return jsonify({"error": "No autenticado"}), 401
-    
+
     user = User.query.get(session["user_id"])
     if not user or not user.is_admin:
         return jsonify({"error": "Acceso denegado - Solo administradores"}), 403
-    
+
     diagnostico = {
         "configuracion": {
             "MAIL_SERVER": app.config["MAIL_SERVER"],
@@ -2574,13 +2581,15 @@ def test_email_config():
             "MAIL_USE_TLS": app.config["MAIL_USE_TLS"],
             "MAIL_USERNAME": app.config["MAIL_USERNAME"],
             "MAIL_PASSWORD_SET": bool(app.config["MAIL_PASSWORD"]),
-            "MAIL_PASSWORD_LENGTH": len(app.config["MAIL_PASSWORD"]) if app.config["MAIL_PASSWORD"] else 0,
+            "MAIL_PASSWORD_LENGTH": (
+                len(app.config["MAIL_PASSWORD"]) if app.config["MAIL_PASSWORD"] else 0
+            ),
             "MAIL_DEFAULT_SENDER": app.config["MAIL_DEFAULT_SENDER"],
         },
         "test_result": None,
-        "error": None
+        "error": None,
     }
-    
+
     # Intentar enviar un email de prueba
     try:
         if not app.config["MAIL_USERNAME"] or not app.config["MAIL_PASSWORD"]:
@@ -2606,19 +2615,19 @@ def test_email_config():
                     <small>Enviado el {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</small>
                 </body>
                 </html>
-                """
+                """,
             )
-            
+
             mail.send(msg)
             diagnostico["test_result"] = "SUCCESS"
             logger.info(f"[MAIL TEST] ✅ Email de prueba enviado a {user.email}")
-            
+
     except Exception as e:
         diagnostico["test_result"] = "FAILED"
         diagnostico["error"] = str(e)
         diagnostico["traceback"] = traceback.format_exc()
         logger.error(f"[MAIL TEST] ❌ Error: {str(e)}")
-    
+
     return jsonify(diagnostico), 200 if diagnostico["test_result"] == "SUCCESS" else 500
 
 

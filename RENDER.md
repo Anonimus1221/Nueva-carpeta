@@ -23,6 +23,8 @@ gunicorn --worker-class eventlet -w 1 app:app
 
 Configura estas variables en **Render Dashboard → Environment**:
 
+### Variables Obligatorias
+
 | Variable | Valor de Ejemplo | Descripción |
 |----------|-----------------|-------------|
 | `SECRET_KEY` | `python -c "import secrets; print(secrets.token_hex(32))"` | Clave secreta para sesiones (genera una única) |
@@ -35,6 +37,16 @@ Configura estas variables en **Render Dashboard → Environment**:
 | `MAIL_DEFAULT_SENDER` | `tu_email@gmail.com` | Email por defecto |
 | `GOOGLE_CLIENT_ID` | `1032673435557-xxx.apps.googleusercontent.com` | OAuth 2.0 Client ID |
 | `GOOGLE_CLIENT_SECRET` | `GOCSPX-xxxx` | OAuth 2.0 Client Secret |
+
+### Variables Opcionales (Configuración Inicial DB)
+
+| Variable | Valor por Defecto | Descripción |
+|----------|------------------|-------------|
+| `ADMIN_EMAIL` | `admin@hbuilds.com` | Email del usuario administrador |
+| `ADMIN_PASSWORD` | `admin123` | Contraseña del administrador |
+| `ADMIN_NAME` | `Administrator` | Nombre del administrador |
+
+⚠️ **IMPORTANTE:** La base de datos SQLite se reinicia en cada deploy en Render (sistema de archivos efímero). Los mapas de ejemplo se crean automáticamente al iniciar.
 
 ## ⚙️ Configuración de Google OAuth
 
