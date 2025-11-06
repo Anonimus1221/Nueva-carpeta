@@ -425,15 +425,130 @@ def check_ip_reputation():
 
 @app.before_request
 def create_tables():
-    """Crear tablas en la primera petición si no existen"""
+    """Crear tablas en la primera petición si no existen e inicializar datos"""
     if not hasattr(app, "tables_created"):
         with app.app_context():
             try:
                 db.create_all()
                 app.tables_created = True
                 logger.info("Tablas de base de datos creadas/verificadas")
+                
+                # Inicializar datos de ejemplo si la DB está vacía
+                if Map.query.count() == 0:
+                    logger.info("[INIT] Base de datos vacía, inicializando datos de ejemplo...")
+                    
+                    # Crear usuario administrador
+                    admin_email = os.getenv("ADMIN_EMAIL", "admin@hbuilds.com")
+                    admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+                    admin_name = os.getenv("ADMIN_NAME", "Administrator")
+                    
+                    admin = User.query.filter_by(email=admin_email).first()
+                    if not admin:
+                        admin = User(
+                            name=admin_name,
+                            email=admin_email,
+                            is_admin=True,
+                            auth_provider="local",
+                        )
+                        admin.set_password(admin_password)
+                        db.session.add(admin)
+                        logger.info(f"[INIT] ✅ Usuario administrador creado: {admin_email}")
+                    
+                    # Crear mapas de ejemplo
+                    mapas_ejemplo = [
+                        {
+                            "title": "Reino Místico",
+                            "description": "Un mundo de fantasía épica con castillos majestuosos, dungeons peligrosos y secretos por descubrir.",
+                            "price": 15.99,
+                            "image": "reino_mistico.jpg",
+                            "features": json.dumps([
+                                "🏰 5+ Castillos únicos completamente amueblados",
+                                "⚔️ 10 Dungeons con jefes personalizados",
+                                "🎨 Texturas customizadas incluidas",
+                            ]),
+                            "is_featured": True,
+                            "is_premium": True,
+                        },
+                        {
+                            "title": "Ciudad Cyberpunk 2077",
+                            "description": "Una metrópolis futurista llena de neón, rascacielos imponentes y tecnología avanzada.",
+                            "price": 18.99,
+                            "image": "cyberpunk.jpg",
+                            "features": json.dumps([
+                                "🌃 Ciudad completa con +50 edificios",
+                                "🚗 Sistema de transporte urbano",
+                                "💡 Iluminación neón realista",
+                            ]),
+                            "is_featured": True,
+                            "is_premium": True,
+                        },
+                        {
+                            "title": "Isla Tropical Survival",
+                            "description": "Sobrevive en una isla paradisíaca con recursos limitados y peligros ocultos.",
+                            "price": 12.99,
+                            "image": "tropical.jpg",
+                            "features": json.dumps([
+                                "🏝️ Isla completa con biomas variados",
+                                "🔥 Sistema de supervivencia integrado",
+                                "🐚 Fauna y flora realista",
+                            ]),
+                            "is_featured": True,
+                            "is_premium": True,
+                        },
+                        {
+                            "title": "Mapa de Práctica GRATIS",
+                            "description": "Mapa básico gratuito para practicar construcción y explorar mecánicas del juego.",
+                            "price": 0.00,
+                            "image": "practice.jpg",
+                            "features": json.dumps([
+                                "🎁 Completamente GRATIS",
+                                "📚 Tutorial incluido",
+                                "🔧 Herramientas básicas",
+                            ]),
+                            "is_featured": False,
+                            "is_premium": False,
+                        },
+                        {
+                            "title": "PvP Arena Medieval",
+                            "description": "Arena de combate medieval perfecta para batallas PvP épicas con tus amigos.",
+                            "price": 9.99,
+                            "image": "pvp_arena.jpg",
+                            "features": json.dumps([
+                                "⚔️ 3 Arenas de combate diferentes",
+                                "🏆 Sistema de espectadores",
+                                "🛡️ Salas de equipamiento",
+                            ]),
+                            "is_featured": False,
+                            "is_premium": True,
+                        },
+                        {
+                            "title": "Base Espacial Luna-7",
+                            "description": "Estación espacial futurista con tecnología avanzada y vistas al espacio.",
+                            "price": 14.99,
+                            "image": "space_station.jpg",
+                            "features": json.dumps([
+                                "🚀 Estación completa con múltiples módulos",
+                                "🌌 Vistas al espacio exterior",
+                                "🤖 Sistema de defensa automatizado",
+                            ]),
+                            "is_featured": False,
+                            "is_premium": True,
+                        },
+                    ]
+                    
+                    for mapa_data in mapas_ejemplo:
+                        mapa = Map(**mapa_data)
+                        db.session.add(mapa)
+                    
+                    db.session.commit()
+                    logger.info(f"[INIT] ✅ {len(mapas_ejemplo)} mapas de ejemplo creados")
+                    logger.info("[INIT] 🎉 Base de datos inicializada correctamente")
+                    
             except Exception as e:
-                logger.error(f"Error creando tablas: {e}")
+                logger.error(f"Error creando tablas o inicializando datos: {e}")
+                import traceback
+                traceback.print_exc()
+
 
 
 # ==================== RUTAS PRINCIPALES ====================
