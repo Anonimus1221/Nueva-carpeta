@@ -69,6 +69,8 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", secrets.token_hex(32))
 
 # Configurar ruta absoluta de la base de datos
 basedir = os.path.abspath(os.path.dirname(__file__))
+# Asegurar que la carpeta 'instance' exista (evita errores de SQLite en despliegues)
+os.makedirs(os.path.join(basedir, "instance"), exist_ok=True)
 db_path = os.path.join(basedir, "instance", "hbuilds.db")
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
 
