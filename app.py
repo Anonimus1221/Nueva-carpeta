@@ -64,6 +64,28 @@ console_handler.setLevel(logging.INFO)
 logging.basicConfig(level=logging.INFO, handlers=[file_handler, console_handler])
 logger = logging.getLogger(__name__)
 
+# Validación de variables de entorno críticas al arrancar
+REQUIRED_ENV_VARS = {
+    "SECRET_KEY": "Clave secreta para sesiones",
+    "MAIL_USERNAME": "Email para envío de correos",
+    "MAIL_PASSWORD": "Contraseña de aplicación de Gmail",
+}
+
+missing_vars = []
+for var, description in REQUIRED_ENV_VARS.items():
+    if not os.getenv(var):
+        missing_vars.append(f"  - {var}: {description}")
+
+if missing_vars:
+    error_msg = "[ERROR] VARIABLES DE ENTORNO FALTANTES:\n" + "\n".join(missing_vars)
+    error_msg += (
+        "\n\n[INFO] Configura estas variables en Render Dashboard > Environment"
+    )
+    logger.critical(error_msg)
+    print(error_msg, file=sys.stderr)
+    # No fallar inmediatamente, permitir que la app arranque para ver logs
+    # sys.exit(1)
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", secrets.token_hex(32))
 
@@ -122,6 +144,14 @@ app.config["MAIL_DEFAULT_SENDER"] = os.getenv(
 db.init_app(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 mail = Mail(app)
+
+logger.info("[OK] Flask app inicializada correctamente")
+logger.info(f"[DB] Base de datos: {db_path}")
+logger.info(f"[ENV] Entorno: {os.getenv('FLASK_ENV', 'development')}")
+logger.info(f"[MAIL] Email configurado: {app.config['MAIL_USERNAME']}")
+logger.info(
+    f"[SEC] SECRET_KEY configurada: {'Si' if app.config['SECRET_KEY'] else 'No'}"
+)
 
 # Configurar rate limiting anti-DDoS
 limiter = Limiter(
