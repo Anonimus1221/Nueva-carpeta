@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Compras - H. Builds</title>
+    <link rel="stylesheet" href="/static/css/purchases.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+    <div class="particles"></div>
+    
+    <!-- NAVBAR -->
+    <header>
+        <nav>
+            <div class="logo">🛒 Mis Compras</div>
+            <ul class="nav-links">
+                <li><a href="/home">🏠 Inicio</a></li>
+                <li><a href="/chat">💬 Chat</a></li>
+                <li><a href="/profile">👤 Perfil</a></li>
+                <li><a href="/purchases" class="active">🛒 Compras</a></li>
+            </ul>
+            <div class="user-menu">
+                <img src="{{ user.profile_picture if user.profile_picture else '/static/image/default-avatar.png' }}" 
+                     alt="{{ user.name }}" 
+                     class="nav-avatar">
+                <span>{{ user.name }}</span>
+                <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="purchases-container">
+        <div class="container">
+            <div class="page-header">
+                <h1>📦 Mis Compras</h1>
+                <p>Aquí encontrarás todos los mapas que has adquirido</p>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🛒</div>
+                    <div class="stat-info">
+                        <h3>{{ purchases|length }}</h3>
+                        <p>Total de Compras</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3>${{ total_spent|default(0)|round(2) }}</h3>
+                        <p>Total Gastado</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <h3>{{ last_purchase_date|default('N/A') }}</h3>
+                        <p>Última Compra</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Compras -->
+            <div class="purchases-list">
+                {% if purchases %}
+                    {% for purchase in purchases %}
+                    <div class="purchase-card" data-purchase-id="{{ purchase.id }}">
+                        <div class="purchase-image">
+                            {% if purchase.map and purchase.map.image %}
+                                <img src="{{ purchase.map.image }}" alt="{{ purchase.map.title }}">
+                            {% else %}
+                                <div class="image-placeholder">🗺️</div>
+                            {% endif %}
+                            <div class="purchase-status {{ purchase.status }}">
+                                {% if purchase.status == 'completed' %}
+                                    ✅ Completada
+                                {% else %}
+                                    ⏳ Pendiente
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="purchase-info">
+                            <h3>{{ purchase.map.title if purchase.map else 'Mapa no disponible' }}</h3>
+                            <p class="purchase-description">
+                                {% if purchase.map and purchase.map.description %}
+                                    {{ purchase.map.description[:150] }}...
+                                {% else %}
+                                    Este mapa ya no está disponible
+                                {% endif %}
+                            </p>
+                            
+                            <div class="purchase-meta">
+                                <span class="meta-item">
+                                    <strong>📅 Fecha:</strong> 
+                                    {{ purchase.created_at.strftime('%d/%m/%Y %H:%M') }}
+                                </span>
+                                <span class="meta-item">
+                                    <strong>💰 Precio:</strong> 
+                                    ${{ purchase.price|round(2) if purchase.price else '0.00' }}
+                                </span>
+                                <span class="meta-item">
+                                    <strong>🆔 ID:</strong> 
+                                    #{{ purchase.id }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="purchase-actions">
+                            {% if purchase.status == 'pending' %}
+                            <button class="btn-action btn-continue-payment" onclick="continuePayment({{ purchase.id }})">
+                                💳 Continuar Pago
+                            </button>
+                            <button class="btn-action btn-details" onclick="viewPurchaseDetails({{ purchase.id }})">
+                                📋 Detalles
+                            </button>
+                            {% elif purchase.map and purchase.status == 'completed' %}
+                            <button class="btn-action btn-download" onclick="downloadMap({{ purchase.map.id }})">
+                                📥 Descargar
+                            </button>
+                            <button class="btn-action btn-details" onclick="viewPurchaseDetails({{ purchase.id }})">
+                                📋 Detalles
+                            </button>
+                            <button class="btn-action btn-comment" onclick="addComment({{ purchase.map.id }})">
+                                💬 Comentar
+                            </button>
+                            {% else %}
+                            <button class="btn-action" disabled style="opacity: 0.5;">
+                                ❌ Mapa eliminado
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">🛒</div>
+                        <h2>No tienes compras aún</h2>
+                        <p>Explora nuestro catálogo y encuentra mapas increíbles</p>
+                        <a href="/home#mapas" class="btn-primary">Ver Mapas Disponibles</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Detalles de Compra -->
+    <div id="purchaseDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('purchaseDetailsModal')">&times;</span>
+            <h2>📋 Detalles de la Compra</h2>
+            <div id="purchaseDetailsContent"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 H. Builds. Todos los derechos reservados.</p>
+        <p>📧 Contacto: <a href="mailto:contacthectorbuilds@gmail.com" style="color: #ff3333; text-decoration: none;">contacthectorbuilds@gmail.com</a></p>
+    </footer>
+
+    <script>
+        window.userData = {
+            name: "{{ user.name }}",
+            id: {{ user.id }}
+        };
+    </script>
+    <script src="/static/js/purchases.js"></script>
+</body>
+</html>

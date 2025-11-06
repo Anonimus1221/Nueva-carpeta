@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créditos - H. Builds</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas de partículas de fondo */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Contenedor principal */
+        .credits-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 4rem 2rem;
+        }
+
+        /* Efecto de resplandor central */
+        .glow-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255,51,51,0.2) 0%, transparent 70%);
+            filter: blur(150px);
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse-glow 4s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Botón de volver */
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, #ff3333, #cc0000);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 20px rgba(255,51,51,0.5);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            transform: translateX(-10px);
+            box-shadow: 0 6px 30px rgba(255,51,51,0.7);
+        }
+
+        /* Título principal */
+        .main-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fade-in-down 1s;
+        }
+
+        .main-title h1 {
+            font-size: 5rem;
+            background: linear-gradient(45deg, #ff3333, #ffa500, #ff3333);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(255,51,51,0.5);
+            animation: gradient-shift 3s infinite, title-glow 2s infinite;
+            margin-bottom: 1rem;
+        }
+
+        .main-title .subtitle {
+            font-size: 1.5rem;
+            color: #aaa;
+            animation: fade-in 1s 0.3s backwards;
+        }
+
+        .divider {
+            width: 300px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff3333, #ffa500, #ff3333, transparent);
+            margin: 2rem auto;
+            animation: expand-contract 3s infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes title-glow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255,51,51,0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255,51,51,0.8)); }
+        }
+
+        @keyframes expand-contract {
+            0%, 100% { width: 300px; opacity: 0.5; }
+            50% { width: 500px; opacity: 1; }
+        }
+
+        @keyframes fade-in-down {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Grid de tarjetas */
+        .cards-grid {
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            animation: fade-in 1s 0.5s backwards;
+        }
+
+        /* Tarjeta de crédito */
+        .credit-card {
+            background: rgba(20,20,20,0.9);
+            border: 3px solid transparent;
+            border-radius: 30px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: card-slide-in 0.8s backwards;
+        }
+
+        .credit-card:nth-child(1) { animation-delay: 0.6s; }
+        .credit-card:nth-child(2) { animation-delay: 0.8s; }
+
+        @keyframes card-slide-in {
+            from { opacity: 0; transform: translateY(100px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .credit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,51,51,0.1), transparent, rgba(255,165,0,0.1));
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .credit-card:hover::before {
+            opacity: 1;
+        }
+
+        .credit-card:hover {
+            transform: translateY(-20px) scale(1.05);
+            border-color: #ff3333;
+            box-shadow: 
+                0 30px 80px rgba(255,51,51,0.4),
+                0 0 100px rgba(255,51,51,0.2),
+                inset 0 0 50px rgba(255,51,51,0.1);
+        }
+
+        /* Efecto de brillo animado */
+        .shine-effect {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine-sweep 3s infinite;
+        }
+
+        @keyframes shine-sweep {
+            0% { left: -100%; }
+            50%, 100% { left: 200%; }
+        }
+
+        /* Avatar del usuario */
+        .avatar-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 2rem;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #ff3333,
+                #ffa500,
+                #ff3333
+            );
+            padding: 5px;
+            animation: rotate-ring 3s linear infinite;
+        }
+
+        @keyframes rotate-ring {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            box-shadow: 0 0 40px rgba(255,51,51,0.6);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Información del usuario */
+        .user-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff3333, #ffa500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: text-glow 2s infinite;
+        }
+
+        @keyframes text-glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255,51,51,0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255,51,51,0.8)); }
+        }
+
+        .user-role {
+            font-size: 1.3rem;
+            color: #ffa500;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-description {
+            color: #aaa;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Tecnologías/habilidades */
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .tech-tag {
+            background: rgba(255,51,51,0.2);
+            border: 2px solid rgba(255,51,51,0.4);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            color: #ff3333;
+            transition: all 0.3s;
+            animation: tag-pop 0.5s backwards;
+        }
+
+        .tech-tag:nth-child(1) { animation-delay: 1s; }
+        .tech-tag:nth-child(2) { animation-delay: 1.1s; }
+        .tech-tag:nth-child(3) { animation-delay: 1.2s; }
+        .tech-tag:nth-child(4) { animation-delay: 1.3s; }
+        .tech-tag:nth-child(5) { animation-delay: 1.4s; }
+
+        @keyframes tag-pop {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .tech-tag:hover {
+            transform: scale(1.15) rotate(5deg);
+            background: rgba(255,51,51,0.4);
+            box-shadow: 0 5px 20px rgba(255,51,51,0.5);
+        }
+
+        /* Enlaces sociales */
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .social-link {
+            background: linear-gradient(135deg, #ff3333, #cc0000);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 5px 25px rgba(255,51,51,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 40px rgba(255,51,51,0.6);
+        }
+
+        .social-link i {
+            font-size: 1.5rem;
+        }
+
+        /* Sección de estadísticas */
+        .stats-section {
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            background: rgba(255,51,51,0.05);
+            border: 3px solid rgba(255,51,51,0.2);
+            border-radius: 30px;
+            padding: 3rem;
+            animation: fade-in 1s 1s backwards;
+        }
+
+        .stats-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ff3333;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 20px rgba(255,51,51,0.5);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(20,20,20,0.8);
+            border-radius: 20px;
+            border: 2px solid rgba(255,51,51,0.2);
+            transition: all 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            border-color: #ff3333;
+            box-shadow: 0 10px 40px rgba(255,51,51,0.3);
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            animation: count-up 2s;
+        }
+
+        .stat-item:nth-child(1) .stat-number { color: #ff3333; }
+        .stat-item:nth-child(2) .stat-number { color: #ffa500; }
+        .stat-item:nth-child(3) .stat-number { color: #4caf50; }
+        .stat-item:nth-child(4) .stat-number { color: #2196f3; }
+
+        @keyframes count-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        /* Tecnologías utilizadas */
+        .tech-section {
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            text-align: center;
+            animation: fade-in 1s 1.2s backwards;
+        }
+
+        .tech-section-title {
+            font-size: 2.5rem;
+            color: #ff3333;
+            margin-bottom: 3rem;
+            text-shadow: 0 0 20px rgba(255,51,51,0.5);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+        }
+
+        .tech-item {
+            background: rgba(30,30,30,0.9);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255,51,51,0.3);
+            transition: all 0.4s;
+            animation: tech-fade-in 0.5s backwards;
+        }
+
+        .tech-item:nth-child(1) { animation-delay: 1.3s; }
+        .tech-item:nth-child(2) { animation-delay: 1.4s; }
+        .tech-item:nth-child(3) { animation-delay: 1.5s; }
+        .tech-item:nth-child(4) { animation-delay: 1.6s; }
+        .tech-item:nth-child(5) { animation-delay: 1.7s; }
+        .tech-item:nth-child(6) { animation-delay: 1.8s; }
+
+        @keyframes tech-fade-in {
+            from { opacity: 0; transform: scale(0.5) rotate(10deg); }
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .tech-item:hover {
+            transform: translateY(-10px) rotate(5deg) scale(1.1);
+            border-color: #ff3333;
+            box-shadow: 0 15px 50px rgba(255,51,51,0.4);
+        }
+
+        .tech-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: icon-bounce 2s infinite;
+        }
+
+        @keyframes icon-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .tech-name {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Mensaje final */
+        .final-message {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(255,51,51,0.1), rgba(255,51,51,0.05));
+            border-radius: 30px;
+            border: 3px solid rgba(255,51,51,0.3);
+            animation: fade-in 1s 1.5s backwards;
+        }
+
+        .final-message h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #ff3333;
+            text-shadow: 0 0 20px rgba(255,51,51,0.5);
+        }
+
+        .final-message p {
+            color: #aaa;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .final-message strong {
+            color: #ff3333;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title h1 {
+                font-size: 3rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .credit-card {
+                padding: 2rem;
+            }
+
+            .back-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .stats-grid,
+            .tech-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas de partículas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Efecto de resplandor -->
+    <div class="glow-effect"></div>
+
+    <!-- Botón de volver -->
+    <a href="/home" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        Volver al Inicio
+    </a>
+
+    <!-- Contenedor principal -->
+    <div class="credits-container">
+        <!-- Título principal -->
+        <div class="main-title">
+            <h1>✨ CRÉDITOS ✨</h1>
+            <p class="subtitle">El equipo detrás de H. Builds</p>
+            <div class="divider"></div>
+        </div>
+
+        <!-- Grid de tarjetas de créditos -->
+        <div class="cards-grid">
+            <!-- Desarrollador Principal -->
+            <div class="credit-card">
+                <div class="shine-effect"></div>
+                
+                <div class="avatar-container">
+                    <div class="avatar-ring">
+                        <div class="avatar-inner" style="background: url('/static/image/developer.jpg') center/cover; font-size: 0;"></div>
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    <h2 class="user-name">Anonimus1221</h2>
+                    <p class="user-role">👑 Desarrollador Full Stack</p>
+                    <p class="user-description">
+                        Estudiante de Ingeniería en Ciencias de la Computación especializado en Linux y Ciberseguridad. 
+                        Creador de la plataforma H. Builds desde cero. Me encanta programar y construir cosas nuevas, 
+                        productivas, innovadoras y creativas. Especializado en Diseño Web, Desarrollo Android y Marketing Digital.
+                    </p>
+                </div>
+
+                <div class="tech-tags">
+                    <span class="tech-tag">🐍 Python</span>
+                    <span class="tech-tag">⚡ Flask</span>
+                    <span class="tech-tag">📜 JavaScript</span>
+                    <span class="tech-tag">🎨 CSS3</span>
+                    <span class="tech-tag">� PHP</span>
+                    <span class="tech-tag">⚙️ C++</span>
+                    <span class="tech-tag">�🗄️ MySQL</span>
+                    <span class="tech-tag">🖥️ HTML5</span>
+                </div>
+
+                <div class="social-links">
+                    <a href="https://github.com/Anonimus1221" target="_blank" class="social-link">
+                        <i class="fab fa-github"></i>
+                        GitHub Profile
+                    </a>
+                    <a href="mailto:olivercamachodiaz2008@gmail.com" class="social-link" style="background: linear-gradient(135deg, #ffa500, #ff6b00);">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </a>
+                </div>
+            </div>
+
+            <!-- Creador de Contenido -->
+            <div class="credit-card">
+                <div class="shine-effect"></div>
+                
+                <div class="avatar-container">
+                    <div class="avatar-ring" style="background: conic-gradient(from 0deg, #ffa500, #ff6b00, #ffa500);">
+                        <div class="avatar-inner" style="background: url('/static/image/HBU.jpg') center/cover; box-shadow: 0 0 40px rgba(255,165,0,0.6); font-size: 0;"></div>
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    <h2 class="user-name" style="background: linear-gradient(45deg, #ffa500, #ff6b00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">H. Builds</h2>
+                    <p class="user-role" style="color: #ffa500;">🏗️ Creador de Mapas</p>
+                    <p class="user-description">
+                        Arquitecto maestro y diseñador de mundos de Minecraft. Creador de experiencias 
+                        únicas y memorables que transforman servidores Bedrock. Especializado en construcciones 
+                        épicas, dungeons inmersivos y mundos de fantasía que cautivan a miles de jugadores.
+                    </p>
+                </div>
+
+                <div class="tech-tags">
+                    <span class="tech-tag" style="background: rgba(255,165,0,0.2); border-color: rgba(255,165,0,0.4); color: #ffa500;">🏰 Arquitectura</span>
+                    <span class="tech-tag" style="background: rgba(255,165,0,0.2); border-color: rgba(255,165,0,0.4); color: #ffa500;">🎮 Game Design</span>
+                    <span class="tech-tag" style="background: rgba(255,165,0,0.2); border-color: rgba(255,165,0,0.4); color: #ffa500;">🗺️ WorldEdit</span>
+                    <span class="tech-tag" style="background: rgba(255,165,0,0.2); border-color: rgba(255,165,0,0.4); color: #ffa500;">✨ Creatividad</span>
+                </div>
+
+                <div class="social-links">
+                    <a href="#" class="social-link" style="background: linear-gradient(135deg, #ffa500, #ff6b00);">
+                        <i class="fas fa-map"></i>
+                        Ver Mapas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas del Proyecto -->
+        <div class="stats-section">
+            <h2 class="stats-title">📊 Estadísticas del Proyecto</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">2500+</div>
+                    <div class="stat-label">Líneas de Código</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">20+</div>
+                    <div class="stat-label">Funcionalidades</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Dedicación</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Creatividad</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tecnologías Utilizadas -->
+        <div class="tech-section">
+            <h2 class="tech-section-title">⚙️ Stack Tecnológico</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-icon">🐍</div>
+                    <div class="tech-name">Python 3.12</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">⚡</div>
+                    <div class="tech-name">Flask 3.0</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🗄️</div>
+                    <div class="tech-name">SQLAlchemy</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🔌</div>
+                    <div class="tech-name">Socket.IO</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">📜</div>
+                    <div class="tech-name">JavaScript ES6+</div>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">🎨</div>
+                    <div class="tech-name">CSS3 Animations</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje Final -->
+        <div class="final-message">
+            <h3>✨ Gracias por visitar H. Builds ✨</h3>
+            <p>
+                Plataforma desarrollada con 💖 y mucho ☕ por <strong>Anonimus1221</strong><br>
+                Mapas épicos creados con dedicación por <strong>H. Builds</strong><br><br>
+                <em>"Transformando ideas en experiencias digitales inolvidables"</em>
+            </p>
+        </div>
+    </div>
+
+    <!-- JavaScript para partículas -->
+    <script>
+        // Configuración del canvas de partículas
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Clase Partícula
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+                this.fadeDelay = Math.random() * 600;
+                this.fadeStart = Date.now() + this.fadeDelay;
+                this.fadingOut = false;
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.speed = Math.random() * 0.5 + 0.2;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.radius = Math.random() * 3 + 1;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                
+                // Colores aleatorios entre rojo y naranja
+                const colors = ['#ff3333', '#ffa500', '#ff6b00', '#cc0000'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Rebote en los bordes
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Mantener dentro del canvas
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+                
+                // Efecto de resplandor
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Crear partículas
+        const particles = [];
+        const particleCount = 100;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        // Conectar partículas cercanas
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 51, 51, ${0.2 * (1 - distance / 150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animación
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            connectParticles();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Responsive
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Interacción con el mouse
+        canvas.addEventListener('mousemove', (e) => {
+            particles.forEach(particle => {
+                const dx = particle.x - e.clientX;
+                const dy = particle.y - e.clientY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 100) {
+                    particle.vx += dx * 0.0001;
+                    particle.vy += dy * 0.0001;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

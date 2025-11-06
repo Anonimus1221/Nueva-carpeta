@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones - H. Builds</title>
+    <link rel="stylesheet" href="/static/css/notifications.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+    <div class="particles"></div>
+    
+    <!-- NAVBAR -->
+    <header>
+        <nav>
+            <div class="logo">🔔 Notificaciones</div>
+            <ul class="nav-links">
+                <li><a href="/home">🏠 Inicio</a></li>
+                <li><a href="/chat">💬 Chat</a></li>
+                <li><a href="/profile">👤 Perfil</a></li>
+                <li><a href="/purchases">🛒 Compras</a></li>
+                <li><a href="/notifications" class="active">🔔 Notificaciones</a></li>
+            </ul>
+            <div class="user-menu">
+                <img src="{{ user.profile_picture if user.profile_picture else '/static/image/default-avatar.png' }}" 
+                     alt="{{ user.name }}" 
+                     class="nav-avatar">
+                <span>{{ user.name }}</span>
+                <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="notifications-container">
+        <div class="container">
+            <div class="page-header">
+                <h1>🔔 Centro de Notificaciones</h1>
+                <div class="header-actions">
+                    <button class="btn-action" onclick="markAllAsRead()">✅ Marcar todas como leídas</button>
+                    <button class="btn-action" onclick="deleteAll()">🗑️ Eliminar todas</button>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterNotifications('all')">
+                    Todas <span class="badge">{{ notifications|length }}</span>
+                </button>
+                <button class="filter-btn" onclick="filterNotifications('unread')">
+                    No leídas <span class="badge unread-count">{{ unread_count|default(0) }}</span>
+                </button>
+                <button class="filter-btn" onclick="filterNotifications('purchases')">
+                    💰 Compras
+                </button>
+                <button class="filter-btn" onclick="filterNotifications('comments')">
+                    💬 Comentarios
+                </button>
+                <button class="filter-btn" onclick="filterNotifications('system')">
+                    ⚙️ Sistema
+                </button>
+            </div>
+
+            <!-- Lista de Notificaciones -->
+            <div class="notifications-list">
+                {% if notifications %}
+                    {% for notification in notifications %}
+                    <div class="notification-card {{ 'unread' if not notification.is_read else '' }} {{ notification.type }}"
+                         data-id="{{ notification.id }}"
+                         data-type="{{ notification.type }}">
+                        <div class="notification-icon">
+                            {% if notification.type == 'purchase' %}
+                                🛒
+                            {% elif notification.type == 'comment' %}
+                                💬
+                            {% elif notification.type == 'system' %}
+                                ⚙️
+                            {% elif notification.type == 'new_map' %}
+                                🗺️
+                            {% else %}
+                                🔔
+                            {% endif %}
+                        </div>
+
+                        <div class="notification-content">
+                            <h3>{{ notification.title }}</h3>
+                            <p>{{ notification.message }}</p>
+                            <span class="notification-time">
+                                ⏰ {{ notification.created_at.strftime('%d/%m/%Y %H:%M') }}
+                            </span>
+                        </div>
+
+                        <div class="notification-actions">
+                            {% if not notification.is_read %}
+                            <button class="btn-mark-read" onclick="markAsRead({{ notification.id }})" title="Marcar como leída">
+                                ✓
+                            </button>
+                            {% endif %}
+                            <button class="btn-delete" onclick="deleteNotification({{ notification.id }})" title="Eliminar">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">🔔</div>
+                        <h2>No tienes notificaciones</h2>
+                        <p>Aquí aparecerán tus compras, comentarios y actualizaciones del sistema</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Paginación -->
+            {% if total_pages > 1 %}
+            <div class="pagination">
+                {% if page > 1 %}
+                <a href="?page={{ page - 1 }}" class="page-btn">← Anterior</a>
+                {% endif %}
+                
+                <span class="page-info">Página {{ page }} de {{ total_pages }}</span>
+                
+                {% if page < total_pages %}
+                <a href="?page={{ page + 1 }}" class="page-btn">Siguiente →</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 H. Builds. Todos los derechos reservados.</p>
+        <p>📧 Contacto: <a href="mailto:contacthectorbuilds@gmail.com" style="color: #ff3333; text-decoration: none;">contacthectorbuilds@gmail.com</a></p>
+    </footer>
+
+    <script>
+        window.userData = {
+            name: "{{ user.name }}",
+            id: {{ user.id }}
+        };
+    </script>
+    <script src="/static/js/notifications.js"></script>
+</body>
+</html>

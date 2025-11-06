@@ -1,0 +1,99 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+
+# Base de datos (NUNCA SUBIR)
+*.db
+*.sqlite
+*.sqlite3
+hbuilds.db
+
+# Variables de entorno (CRÍTICO - NUNCA SUBIR)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Archivos subidos (NUNCA SUBIR contenido de usuarios)
+static/uploads/profiles/*
+static/uploads/maps/*
+!static/uploads/profiles/.gitkeep
+!static/uploads/maps/.gitkeep
+
+# Logs (pueden contener información sensible)
+logs/
+*.log
+
+# Archivos de desarrollo local (NO SUBIR)
+test_email.py
+verify_security.py
+start.bat
+start_secure.bat
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backups
+*.bak
+*.backup
+*.tmp
+*_backup.py
+*_old.py
+app_part2.py
+app_new.py
+
+# Certificados SSL
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+
+# Archivos de configuración sensibles
+config.py
+secrets.py
+credentials.json
+app_old_backup.py
+temp1.txt
+temp2.txt
+
+# OS
+Thumbs.db
+.DS_Store

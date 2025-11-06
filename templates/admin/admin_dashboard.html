@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - H. Builds</title>
+    <link rel="stylesheet" href="/static/css/inicio.css">
+    <link rel="stylesheet" href="/static/css/profile.css">
+    <style>
+        .admin-container {
+            max-width: 1400px;
+            margin: 6rem auto 2rem;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #ff3333, #cc0000);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid rgba(255, 51, 51, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 51, 51, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            border-color: #ff3333;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 51, 51, 0.5);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff3333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        .admin-section {
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid rgba(255, 51, 51, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-section h2 {
+            color: #ff3333;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upload-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-full {
+            grid-column: 1 / -1;
+        }
+
+        .file-upload-btn {
+            position: relative;
+            padding: 1rem;
+            background: rgba(30, 30, 30, 0.8);
+            border: 2px dashed rgba(255, 51, 51, 0.5);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-btn:hover {
+            border-color: #ff3333;
+            background: rgba(40, 40, 40, 0.9);
+        }
+
+        .file-upload-btn input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: rgba(255, 51, 51, 0.2);
+            color: #ff3333;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+            color: #ccc;
+        }
+
+        .admin-table tr:hover {
+            background: rgba(255, 51, 51, 0.05);
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .btn-edit {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn-toggle-admin {
+            background: #ffa500;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #45a049;
+            transform: translateY(-2px) scale(1.1);
+        }
+
+        .btn-delete:hover {
+            background: #ff0000;
+            transform: translateY(-2px) scale(1.1);
+        }
+
+        .btn-toggle-admin:hover {
+            background: #ff8c00;
+            transform: translateY(-2px) scale(1.1);
+        }
+
+        .rating-stars {
+            color: #ffd700;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .map-admin-card {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 51, 51, 0.2);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .map-admin-card:hover {
+            border-color: #ff3333;
+            transform: translateY(-5px);
+        }
+
+        .map-admin-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .map-admin-info {
+            padding: 1.5rem;
+        }
+
+        .map-admin-title {
+            font-size: 1.3rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .map-admin-price {
+            color: #ff3333;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .features-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <nav>
+            <div class="logo" onclick="window.location.href='/home'">
+                <span>🏗️</span> H. Builds
+            </div>
+            <ul class="nav-links">
+                <li><a href="/home">🏠 Inicio</a></li>
+                <li><a href="/profile">👤 Mi Perfil</a></li>
+                <li><a href="/chat">💬 Chat</a></li>
+                <li><a href="/admin" class="active">⚙️ Admin Panel</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn btn-secondary" onclick="window.location.href='/logout'">🚪 Cerrar Sesión</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1>⚙️ Panel de Administración</h1>
+            <p style="opacity: 0.9;">Dashboard de control total - H. Builds Marketplace</p>
+            <p style="opacity: 0.7; font-size: 0.9rem; margin-top: 0.5rem;">
+                👨‍💼 Administrador | 📊 Sistema de gestión completo
+            </p>
+        </div>
+
+        <!-- Estadísticas Mejoradas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value">{{ total_users }}</div>
+                <div class="stat-label">Usuarios Registrados</div>
+                <div style="font-size: 0.85rem; color: #4CAF50; margin-top: 0.5rem;">
+                    ✅ Comunidad activa
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🗺️</div>
+                <div class="stat-value">{{ total_maps }}</div>
+                <div class="stat-label">Mapas Publicados</div>
+                <div style="font-size: 0.85rem; color: #2196F3; margin-top: 0.5rem;">
+                    📦 Catálogo completo
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value">{{ total_purchases }}</div>
+                <div class="stat-label">Ventas Totales</div>
+                <div style="font-size: 0.85rem; color: #ffa500; margin-top: 0.5rem;">
+                    💵 Ingresos generados
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💬</div>
+                <div class="stat-value">{{ total_comments }}</div>
+                <div class="stat-label">Comentarios</div>
+                <div style="font-size: 0.85rem; color: #9c27b0; margin-top: 0.5rem;">
+                    ⭐ Feedback de usuarios
+                </div>
+            </div>
+        </div>
+
+        <!-- Subir Nuevo Mapa -->
+        <div class="admin-section">
+            <h2>📤 Subir Nuevo Mapa</h2>
+            <form id="uploadMapForm" class="upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Título del Mapa *</label>
+                    <input type="text" name="title" required placeholder="Reino Místico">
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Mapa *</label>
+                    <select name="is_premium" required style="padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; width: 100%;">
+                        <option value="true">👑 Premium (Pago)</option>
+                        <option value="false">🎁 Gratis</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="priceGroup">
+                    <label>Precio (USD) *</label>
+                    <input type="number" name="price" step="0.01" placeholder="15.99" id="priceInput">
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Descripción *</label>
+                    <textarea name="description" required placeholder="Describe el mapa..." style="min-height: 100px;"></textarea>
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Características (una por línea)</label>
+                    <textarea name="features" class="features-input" placeholder="🏰 5+ Castillos únicos&#10;⚔️ 10 Dungeons con jefes&#10;🎨 Texturas customizadas"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Imagen del Mapa</label>
+                    <div class="file-upload-btn">
+                        <span>📷 Seleccionar Imagen</span>
+                        <input type="file" name="image" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.svg" onchange="updateFileName(this, 'imageLabel')">
+                    </div>
+                    <span id="imageLabel" style="color: #aaa; font-size: 0.9rem;"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Archivo del Mapa (.zip, .mcworld)</label>
+                    <div class="file-upload-btn">
+                        <span>📦 Seleccionar Archivo</span>
+                        <input type="file" name="map_file" accept=".zip,.mcworld,.rar" onchange="updateFileName(this, 'mapLabel')">
+                    </div>
+                    <span id="mapLabel" style="color: #aaa; font-size: 0.9rem;"></span>
+                </div>
+
+                <div class="form-group form-full">
+                    <label>🖼️ Galería de Imágenes (opcional - para carrusel)</label>
+                    <div class="file-upload-btn">
+                        <span>📸 Seleccionar Múltiples Imágenes</span>
+                        <input type="file" name="gallery_images" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.svg" multiple onchange="updateFileCount(this, 'galleryLabel')">
+                    </div>
+                    <span id="galleryLabel" style="color: #aaa; font-size: 0.9rem;"></span>
+                    <p style="color: #666; font-size: 0.85rem; margin-top: 0.5rem;">💡 Sube varias imágenes (JPG, PNG, GIF, WEBP, BMP, SVG) para mostrar un carrusel en la página de inicio</p>
+                </div>
+
+                <div class="form-group form-full">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        🚀 Subir Mapa
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Lista de Mapas -->
+        <div class="admin-section">
+            <h2>🗺️ Mapas Publicados</h2>
+            <div class="map-grid">
+                {% for map in maps %}
+                <div class="map-admin-card">
+                    <img src="{{ map.image if map.image.startswith('/') else '/static/image/default_map.jpg' }}" 
+                         alt="{{ map.title }}" class="map-admin-img">
+                    <div class="map-admin-info">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <h3 class="map-admin-title" style="margin: 0;">{{ map.title }}</h3>
+                            {% if map.is_premium %}
+                                <span style="background: linear-gradient(135deg, #ffd700, #ffa500); color: #000; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">👑 PREMIUM</span>
+                            {% else %}
+                                <span style="background: linear-gradient(135deg, #2ed573, #00b894); color: #fff; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">🎁 GRATIS</span>
+                            {% endif %}
+                        </div>
+                        <p class="map-admin-price">
+                            {% if map.is_premium %}
+                                ${{ map.price }} USD
+                            {% else %}
+                                GRATIS
+                            {% endif %}
+                        </p>
+                        <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                            ⭐ {{ map.average_rating() }} | 💬 {{ map.total_reviews() }} reseñas
+                        </p>
+                        
+                        <!-- Mostrar galería si existe -->
+                        {% if map.gallery_images %}
+                            {% set gallery = map.gallery_images | from_json %}
+                            {% if gallery|length > 0 %}
+                            <p style="color: #4CAF50; font-size: 0.85rem; margin-bottom: 1rem;">
+                                🖼️ Galería: {{ gallery|length }} imagen{{ 'es' if gallery|length > 1 else '' }}
+                            </p>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="action-btn" style="background: linear-gradient(135deg, #3498db, #2980b9); flex: 1;" onclick="openEditModal({{ map.id }})">
+                                ✏️ Editar
+                            </button>
+                            <button class="action-btn btn-delete" style="flex: 1;" onclick="deleteMap({{ map.id }}, '{{ map.title }}')">
+                                🗑️ Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Comentarios Recientes -->
+        <div class="admin-section">
+            <h2>💬 Comentarios Recientes</h2>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Mapa</th>
+                            <th>Calificación</th>
+                            <th>Comentario</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comment in recent_comments %}
+                        <tr>
+                            <td>{{ comment.user.name }}</td>
+                            <td>{{ comment.map.title }}</td>
+                            <td>
+                                <span class="rating-stars">
+                                    {{ '⭐' * comment.rating }}
+                                </span>
+                            </td>
+                            <td>{{ comment.comment[:50] }}...</td>
+                            <td>{{ comment.created_at.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                <button class="action-btn btn-delete" onclick="deleteComment({{ comment.id }})">
+                                    🗑️ Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Compras Recientes -->
+        <div class="admin-section">
+            <h2>💰 Compras Recientes</h2>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Mapa</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchase in recent_purchases %}
+                        <tr>
+                            <td>{{ purchase.user.name }}</td>
+                            <td>{{ purchase.map.title }}</td>
+                            <td>${{ purchase.price }} USD</td>
+                            <td>
+                                <span style="color: {% if purchase.status == 'completed' %}#4CAF50{% else %}#ff8800{% endif %}">
+                                    {{ purchase.status }}
+                                </span>
+                            </td>
+                            <td>{{ purchase.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Gestión de Usuarios y Roles -->
+        <div class="admin-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>👥 Gestión de Usuarios y Roles</h2>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <input type="text" id="searchUsers" placeholder="🔍 Buscar usuarios..." 
+                        style="padding: 0.8rem 1.2rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; width: 300px;">
+                    <select id="filterRole" onchange="filterUsers()" 
+                        style="padding: 0.8rem 1.2rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; cursor: pointer;">
+                        <option value="all">📊 Todos los usuarios</option>
+                        <option value="admin">👑 Solo Administradores</option>
+                        <option value="user">👤 Solo Usuarios</option>
+                        <option value="google">🌐 Usuarios Google</option>
+                        <option value="local">📧 Usuarios Locales</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="background: rgba(255, 51, 51, 0.1); border: 2px solid rgba(255, 51, 51, 0.3); border-radius: 15px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-size: 2rem;">ℹ️</span>
+                    <div>
+                        <h3 style="color: #ff3333; margin-bottom: 0.5rem;">Gestión de Roles de Administrador</h3>
+                        <p style="color: #ccc; line-height: 1.6; margin: 0;">
+                            • Haz clic en <strong style="color: #ffa500;">👑</strong> para hacer administrador a un usuario<br>
+                            • Haz clic en <strong style="color: #ffa500;">👤</strong> para quitar privilegios de administrador<br>
+                            • Los administradores pueden subir mapas, eliminar comentarios y gestionar usuarios<br>
+                            • No puedes cambiar tu propio rol de administrador por seguridad
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="admin-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>👤 Nombre</th>
+                            <th>📧 Email</th>
+                            <th>🔐 Proveedor</th>
+                            <th>👑 Rol</th>
+                            <th>🛒 Compras</th>
+                            <th>📅 Fecha Registro</th>
+                            <th>⚙️ Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        {% for user in recent_users %}
+                        <tr data-user-role="{{ 'admin' if user.is_admin else 'user' }}" data-user-provider="{{ user.auth_provider }}" data-user-name="{{ user.name.lower() }}" data-user-email="{{ user.email.lower() }}">
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                    <img src="{{ user.profile_picture if user.profile_picture else '/static/image/default-avatar.png' }}" 
+                                         style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ff3333; object-fit: cover;">
+                                    <strong style="color: #fff;">{{ user.name }}</strong>
+                                </div>
+                            </td>
+                            <td style="color: #aaa;">{{ user.email }}</td>
+                            <td>
+                                <span style="padding: 0.4rem 1rem; border-radius: 15px; font-size: 0.85rem; font-weight: 600; {% if user.auth_provider == 'google' %}background: linear-gradient(135deg, #ea4335, #4285f4); color: white;{% else %}background: rgba(255,51,51,0.2); color: #ff3333; border: 1px solid rgba(255,51,51,0.3);{% endif %}">
+                                    {% if user.auth_provider == 'google' %}🌐 GOOGLE{% else %}📧 LOCAL{% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                {% if user.is_admin %}
+                                    <span style="display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #ffa500, #ff8c00); color: white; padding: 0.4rem 1rem; border-radius: 15px; font-weight: 600; font-size: 0.9rem;">
+                                        👑 ADMIN
+                                    </span>
+                                {% else %}
+                                    <span style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(100,100,100,0.3); color: #aaa; padding: 0.4rem 1rem; border-radius: 15px; font-size: 0.9rem;">
+                                        👤 Usuario
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center;">
+                                <span style="background: rgba(76, 175, 80, 0.2); color: #4CAF50; padding: 0.3rem 0.8rem; border-radius: 12px; font-weight: 600;">
+                                    {{ user.purchases|length }} 🛒
+                                </span>
+                            </td>
+                            <td style="color: #aaa;">{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                                    {% if user.auth_provider != 'google' %}
+                                    <button class="action-btn btn-edit" onclick="changePassword({{ user.id }}, '{{ user.name }}')" title="Cambiar Contraseña">
+                                        🔑
+                                    </button>
+                                    {% endif %}
+                                    <button class="action-btn btn-toggle-admin" 
+                                            onclick="toggleAdmin({{ user.id }}, '{{ user.name }}', {{ 'true' if user.is_admin else 'false' }})" 
+                                            title="{% if user.is_admin %}Quitar rol de administrador{% else %}Hacer administrador{% endif %}"
+                                            style="{% if user.id == session.user_id %}opacity: 0.5; cursor: not-allowed;{% endif %}">
+                                        {% if user.is_admin %}👤{% else %}👑{% endif %}
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(30,30,30,0.5); border-radius: 10px; text-align: center; color: #aaa;">
+                <span id="userCount">Mostrando {{ recent_users|length }} usuarios</span>
+            </div>
+        </div>
+
+        <!-- Enviar Notificaciones -->
+        <div class="admin-section">
+            <h2>🔔 Enviar Notificaciones</h2>
+            
+            <div style="background: rgba(255, 51, 51, 0.1); border: 2px solid rgba(255, 51, 51, 0.3); border-radius: 15px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-size: 2rem;">📢</span>
+                    <div>
+                        <h3 style="color: #ff3333; margin-bottom: 0.5rem;">Sistema de Notificaciones</h3>
+                        <p style="color: #ccc; line-height: 1.6; margin: 0;">
+                            Envía notificaciones a todos los usuarios registrados o a un usuario específico.
+                            Las notificaciones aparecerán en tiempo real en la campana de notificaciones de cada usuario.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <form id="notificationForm" class="upload-form">
+                <div class="form-group form-full">
+                    <label>Destinatario *</label>
+                    <select name="recipient_type" id="recipientType" onchange="toggleUserSelect()" required 
+                        style="width: 100%; padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; cursor: pointer;">
+                        <option value="all">📢 Todos los usuarios</option>
+                        <option value="specific">👤 Usuario específico</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-full" id="userSelectDiv" style="display: none;">
+                    <label>Seleccionar Usuario</label>
+                    <select name="user_id" id="specificUser" 
+                        style="width: 100%; padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; cursor: pointer;">
+                        <option value="">-- Selecciona un usuario --</option>
+                        {% for user in recent_users %}
+                        <option value="{{ user.id }}">{{ user.name }} ({{ user.email }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Tipo de Notificación *</label>
+                    <select name="notification_type" required 
+                        style="width: 100%; padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; cursor: pointer;">
+                        <option value="info">ℹ️ Información</option>
+                        <option value="success">✅ Éxito</option>
+                        <option value="warning">⚠️ Advertencia</option>
+                        <option value="announcement">📢 Anuncio</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Título de la Notificación *</label>
+                    <input type="text" name="title" required placeholder="Ej: Nueva actualización disponible" maxlength="100"
+                        style="width: 100%; padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white;">
+                </div>
+
+                <div class="form-group form-full">
+                    <label>Mensaje *</label>
+                    <textarea name="message" required placeholder="Escribe el mensaje de la notificación..." rows="4" maxlength="500"
+                        style="width: 100%; padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; resize: vertical;"></textarea>
+                </div>
+
+                <div class="form-group form-full">
+                    <button type="submit" class="btn-submit">
+                        📤 Enviar Notificación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para cambiar contraseña -->
+    <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: rgba(20,20,20,0.98); border: 2px solid rgba(255,51,51,0.5); border-radius: 20px; padding: 2rem; max-width: 500px; width: 90%; animation: fadeIn 0.3s ease;">
+            <h2 style="color: #ff3333; margin-bottom: 1.5rem;">🔑 Cambiar Contraseña</h2>
+            <p style="color: #aaa; margin-bottom: 1rem;">Usuario: <strong id="modalUserName" style="color: #fff;"></strong></p>
+            
+            <div class="form-group">
+                <label style="color: #fff; margin-bottom: 0.5rem; display: block;">Nueva Contraseña (mínimo 6 caracteres)</label>
+                <input type="password" id="newPassword" placeholder="••••••••" style="width: 100%; padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; font-size: 1rem;">
+            </div>
+            
+            <div class="form-group" style="margin-top: 1rem;">
+                <label style="color: #fff; margin-bottom: 0.5rem; display: block;">Confirmar Contraseña</label>
+                <input type="password" id="confirmPassword" placeholder="••••••••" style="width: 100%; padding: 0.8rem; background: rgba(30,30,30,0.8); border: 1px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; font-size: 1rem;">
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button onclick="submitPasswordChange()" class="btn btn-primary" style="flex: 1;">
+                    ✅ Cambiar Contraseña
+                </button>
+                <button onclick="closePasswordModal()" class="btn btn-secondary" style="flex: 1;">
+                    ❌ Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sobrescribir toggleAdmin con validación de usuario actual
+        const CURRENT_USER_ID = {{ session.user_id if session.user_id else 'null' }};
+
+        async function toggleAdmin(userId, userName, isCurrentlyAdmin) {
+            // Prevenir que el usuario cambie su propio rol
+            if (userId === CURRENT_USER_ID) {
+                alert('⚠️ No puedes cambiar tu propio rol de administrador por razones de seguridad');
+                return;
+            }
+
+            const action = isCurrentlyAdmin ? 'quitar el rol de administrador a' : 'hacer administrador a';
+            const emoji = isCurrentlyAdmin ? '👤' : '👑';
+            const confirmation = confirm(
+                `${emoji} ¿Estás seguro de ${action} ${userName}?\n\n` +
+                (isCurrentlyAdmin 
+                    ? '⚠️ Esta persona perderá acceso al panel de administración y sus funciones de admin.' 
+                    : '✅ Esta persona podrá acceder al panel de administración y gestionar la plataforma.')
+            );
+
+            if (!confirmation) return;
+
+            try {
+                const response = await fetch(`/admin/toggle-admin/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('✅ ' + data.message);
+                    location.reload();
+                } else {
+                    alert('❌ ' + (data.message || 'Error al cambiar el rol'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al conectar con el servidor');
+            }
+        }
+
+        // Abrir modal de edición
+        async function openEditModal(mapId) {
+            const modal = document.getElementById('editModal');
+            const form = document.getElementById('editMapForm');
+            
+            try {
+                const response = await fetch(`/api/map/${mapId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    form.dataset.mapId = mapId;
+                    document.getElementById('edit_title').value = data.title || '';
+                    document.getElementById('edit_description').value = data.description || '';
+                    document.getElementById('edit_price').value = data.price || 0;
+                    document.getElementById('edit_features').value = data.features || '';
+                    document.getElementById('edit_is_premium').checked = data.is_premium || false;
+                    document.getElementById('edit_is_featured').checked = data.is_featured || false;
+                    
+                    // Cargar galería si existe
+                    loadGalleryImages(mapId, data.gallery_images);
+                    
+                    modal.style.display = 'flex';
+                } else {
+                    alert('❌ Error al cargar datos del mapa');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al conectar con el servidor');
+            }
+        }
+
+        // Cerrar modal de edición
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Guardar cambios del mapa
+        async function saveMapEdit(event) {
+            event.preventDefault();
+            const form = document.getElementById('editMapForm');
+            const mapId = form.dataset.mapId;
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(`/admin/edit-map/${mapId}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('✅ ' + data.message);
+                    location.reload();
+                } else {
+                    alert('❌ ' + (data.message || 'Error al actualizar'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al conectar con el servidor');
+            }
+        }
+
+        // Cargar imágenes de galería
+        function loadGalleryImages(mapId, galleryJson) {
+            const container = document.getElementById('galleryImagesPreview');
+            container.innerHTML = '';
+            
+            try {
+                const images = galleryJson ? JSON.parse(galleryJson) : [];
+                images.forEach((imgUrl, index) => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'position: relative; display: inline-block; margin: 0.5rem;';
+                    div.innerHTML = `
+                        <img src="${imgUrl}" style="width: 120px; height: 80px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255,51,51,0.3);">
+                        <button type="button" onclick="deleteGalleryImage(${mapId}, ${index})" 
+                                style="position: absolute; top: -8px; right: -8px; background: #ff3333; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 12px;">✕</button>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error al cargar galería:', error);
+            }
+        }
+
+        // Eliminar imagen de galería
+        async function deleteGalleryImage(mapId, imageIndex) {
+            if (!confirm('¿Eliminar esta imagen?')) return;
+            
+            try {
+                const response = await fetch(`/admin/map/${mapId}/gallery/${imageIndex}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    loadGalleryImages(mapId, JSON.stringify(data.gallery));
+                    alert('✅ Imagen eliminada');
+                } else {
+                    alert('❌ Error al eliminar');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al conectar con el servidor');
+            }
+        }
+
+        // Subir imágenes a galería
+        async function uploadGalleryImages(event) {
+            event.preventDefault();
+            const form = document.getElementById('editMapForm');
+            const mapId = form.dataset.mapId;
+            const fileInput = document.getElementById('gallery_images');
+            
+            if (!fileInput.files.length) {
+                alert('⚠️ Selecciona al menos una imagen');
+                return;
+            }
+            
+            const formData = new FormData();
+            for (let file of fileInput.files) {
+                formData.append('images', file);
+            }
+            
+            try {
+                const response = await fetch(`/admin/map/${mapId}/gallery`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('✅ ' + data.message);
+                    loadGalleryImages(mapId, JSON.stringify(data.gallery));
+                    fileInput.value = '';
+                } else {
+                    alert('❌ ' + (data.message || 'Error al subir imágenes'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al conectar con el servidor');
+            }
+        }
+    </script>
+
+    <!-- Modal de Edición -->
+    <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; overflow-y: auto;">
+        <div style="background: rgba(20,20,20,0.98); border: 2px solid rgba(255,51,51,0.3); border-radius: 20px; padding: 2rem; max-width: 900px; width: 90%; margin: 2rem auto; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="color: #ff3333; font-size: 2rem; margin: 0;">✏️ Editar Mapa</h2>
+                <button onclick="closeEditModal()" style="background: none; border: none; color: #ff3333; font-size: 2rem; cursor: pointer; padding: 0; width: 40px; height: 40px;">&times;</button>
+            </div>
+            
+            <form id="editMapForm" onsubmit="saveMapEdit(event)" enctype="multipart/form-data" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label style="color: white; display: block; margin-bottom: 0.5rem;">Título del Mapa *</label>
+                    <input type="text" id="edit_title" name="title" required style="width: 100%; padding: 0.75rem; background: rgba(30,30,30,0.8); border: 2px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; font-size: 1rem;">
+                </div>
+
+                <div class="form-group">
+                    <label style="color: white; display: block; margin-bottom: 0.5rem;">Precio (USD)</label>
+                    <input type="number" id="edit_price" name="price" step="0.01" min="0" style="width: 100%; padding: 0.75rem; background: rgba(30,30,30,0.8); border: 2px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; font-size: 1rem;">
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label style="color: white; display: block; margin-bottom: 0.5rem;">Descripción *</label>
+                    <textarea id="edit_description" name="description" required rows="4" style="width: 100%; padding: 0.75rem; background: rgba(30,30,30,0.8); border: 2px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; font-size: 1rem; resize: vertical;"></textarea>
+                </div>
+
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label style="color: white; display: block; margin-bottom: 0.5rem;">Características (JSON format)</label>
+                    <textarea id="edit_features" name="features" rows="3" placeholder='["Dimensión: 5000x5000", "Estructuras: 200+"]' style="width: 100%; padding: 0.75rem; background: rgba(30,30,30,0.8); border: 2px solid rgba(255,51,51,0.3); border-radius: 10px; color: white; font-size: 1rem; resize: vertical;"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="color: white; display: block; margin-bottom: 0.5rem;">Imagen Principal</label>
+                    <input type="file" name="image" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.svg" style="width: 100%; padding: 0.5rem; background: rgba(30,30,30,0.8); border: 2px solid rgba(255,51,51,0.3); border-radius: 10px; color: white;">
+                </div>
+
+                <div class="form-group">
+                    <label style="color: white; display: block; margin-bottom: 0.5rem;">Archivo del Mapa</label>
+                    <input type="file" name="map_file" accept=".zip,.mcworld,.mctemplate" style="width: 100%; padding: 0.5rem; background: rgba(30,30,30,0.8); border: 2px solid rgba(255,51,51,0.3); border-radius: 10px; color: white;">
+                </div>
+
+                <div class="form-group" style="display: flex; gap: 2rem;">
+                    <label style="color: white; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="edit_is_premium" name="is_premium" value="true" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span>Es Premium (Pago)</span>
+                    </label>
+                    <label style="color: white; display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="edit_is_featured" name="is_featured" value="true" style="width: 20px; height: 20px; cursor: pointer;">
+                        <span>Destacado</span>
+                    </label>
+                </div>
+
+                <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem;">
+                    <button type="button" onclick="closeEditModal()" style="padding: 0.75rem 2rem; background: rgba(100,100,100,0.3); border: 2px solid rgba(255,255,255,0.3); border-radius: 10px; color: white; font-size: 1rem; cursor: pointer; transition: all 0.3s;">
+                        Cancelar
+                    </button>
+                    <button type="submit" style="padding: 0.75rem 2rem; background: linear-gradient(135deg, #ff3333, #cc0000); border: none; border-radius: 10px; color: white; font-size: 1rem; cursor: pointer; transition: all 0.3s;">
+                        💾 Guardar Cambios
+                    </button>
+                </div>
+            </form>
+
+            <hr style="border: 1px solid rgba(255,51,51,0.3); margin: 2rem 0;">
+
+            <div>
+                <h3 style="color: #ff3333; margin-bottom: 1rem;">🖼️ Galería de Imágenes (Carrusel)</h3>
+                <div id="galleryImagesPreview" style="margin-bottom: 1rem; min-height: 100px; padding: 1rem; background: rgba(30,30,30,0.5); border-radius: 10px; border: 2px dashed rgba(255,51,51,0.3);"></div>
+                
+                <form onsubmit="uploadGalleryImages(event)" style="display: flex; gap: 1rem; align-items: flex-end;">
+                    <div style="flex: 1;">
+                        <label style="color: white; display: block; margin-bottom: 0.5rem;">Agregar Imágenes a la Galería (JPG, PNG, GIF, WEBP, BMP, SVG)</label>
+                        <input type="file" id="gallery_images" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.bmp,.svg" style="width: 100%; padding: 0.5rem; background: rgba(30,30,30,0.8); border: 2px solid rgba(255,51,51,0.3); border-radius: 10px; color: white;">
+                    </div>
+                    <button type="submit" style="padding: 0.75rem 2rem; background: linear-gradient(135deg, #2ed573, #00b894); border: none; border-radius: 10px; color: white; font-size: 1rem; cursor: pointer; white-space: nowrap;">
+                        ➕ Subir Imágenes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Función para mostrar/ocultar el selector de usuario específico
+        function toggleUserSelect() {
+            const recipientType = document.getElementById('recipientType').value;
+            const userSelectDiv = document.getElementById('userSelectDiv');
+            const specificUser = document.getElementById('specificUser');
+            
+            if (recipientType === 'specific') {
+                userSelectDiv.style.display = 'block';
+                specificUser.required = true;
+            } else {
+                userSelectDiv.style.display = 'none';
+                specificUser.required = false;
+                specificUser.value = '';
+            }
+        }
+
+        // Enviar notificación
+        document.getElementById('notificationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                recipient_type: formData.get('recipient_type'),
+                notification_type: formData.get('notification_type'),
+                title: formData.get('title'),
+                message: formData.get('message')
+            };
+            
+            if (data.recipient_type === 'specific') {
+                data.user_id = formData.get('user_id');
+                if (!data.user_id) {
+                    alert('⚠️ Debes seleccionar un usuario específico');
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch('/admin/send-notification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('✅ ' + result.message);
+                    this.reset();
+                    toggleUserSelect();
+                } else {
+                    alert('❌ ' + (result.error || 'Error al enviar notificación'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al conectar con el servidor');
+            }
+        });
+    </script>
+    
+    <script src="/static/js/admin.js"></script>
+</body>
+</html>
+

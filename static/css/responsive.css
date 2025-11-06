@@ -1,0 +1,761 @@
+/* ============================================
+   ESTILOS RESPONSIVE PARA TODAS LAS PÁGINAS
+   Mobile First Design - H. Builds Platform
+   ============================================ */
+
+/* META TAG REQUERIDO EN TODOS LOS HTML:
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+*/
+
+/* ==================== GLOBAL MOBILE ==================== */
+@media (max-width: 968px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 2rem !important;
+    }
+
+    h2 {
+        font-size: 1.7rem !important;
+    }
+
+    h3 {
+        font-size: 1.4rem !important;
+    }
+
+    p {
+        font-size: 0.95rem !important;
+    }
+}
+
+/* ==================== LOGIN & REGISTER ==================== */
+@media (max-width: 968px) {
+    .login-container,
+    .register-container {
+        flex-direction: column !important;
+        width: 95% !important;
+        margin: 1rem auto !important;
+    }
+
+    .side-panel {
+        display: none !important;
+    }
+
+    .login-box,
+    .register-box {
+        padding: 2rem !important;
+        width: 100% !important;
+    }
+
+    .logo {
+        font-size: 1.5rem !important;
+    }
+
+    .login-box h2,
+    .register-box h2 {
+        font-size: 1.8rem !important;
+    }
+
+    .input-group input {
+        font-size: 1rem !important;
+        padding: 0.9rem 1rem 0.9rem 3rem !important;
+    }
+
+    .submit-btn {
+        padding: 0.9rem !important;
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .login-container,
+    .register-container {
+        width: 100% !important;
+        margin: 0.5rem auto !important;
+        border-radius: 15px !important;
+    }
+
+    .login-box,
+    .register-box {
+        padding: 1.5rem !important;
+    }
+
+    .logo {
+        font-size: 1.3rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .login-box h2,
+    .register-box h2 {
+        font-size: 1.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .login-box p,
+    .register-box p {
+        font-size: 0.9rem !important;
+    }
+
+    .input-group {
+        margin-bottom: 1rem !important;
+    }
+
+    .input-group input {
+        font-size: 0.95rem !important;
+        padding: 0.85rem 1rem 0.85rem 2.8rem !important;
+    }
+
+    .input-group i {
+        left: 1rem !important;
+        font-size: 1rem !important;
+    }
+
+    .form-options {
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+        align-items: flex-start !important;
+    }
+
+    .form-options label,
+    .form-options a {
+        font-size: 0.85rem !important;
+    }
+
+    .submit-btn {
+        padding: 0.85rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    .divider {
+        margin: 1.5rem 0 !important;
+        font-size: 0.85rem !important;
+    }
+
+    .social-login {
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+    }
+
+    .social-btn {
+        padding: 0.8rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .signup-link,
+    .login-link {
+        font-size: 0.9rem !important;
+        margin-top: 1.5rem !important;
+    }
+}
+
+/* ==================== HOME PAGE ==================== */
+@media (max-width: 968px) {
+    .navbar {
+        padding: 0.8rem 1rem !important;
+    }
+
+    .nav-links {
+        display: none !important;
+    }
+
+    .hero {
+        padding: 3rem 1rem !important;
+        min-height: auto !important;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem !important;
+    }
+
+    .hero p {
+        font-size: 1rem !important;
+    }
+
+    .maps-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+        gap: 1.5rem !important;
+        padding: 1rem !important;
+    }
+
+    .map-card {
+        max-width: 100% !important;
+    }
+
+    .sidebar {
+        position: fixed !important;
+        left: -100% !important;
+        width: 80% !important;
+        max-width: 300px !important;
+        height: 100vh !important;
+        z-index: 1000 !important;
+        transition: left 0.3s !important;
+    }
+
+    .sidebar.active {
+        left: 0 !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 2rem !important;
+    }
+
+    .hero p {
+        font-size: 0.9rem !important;
+    }
+
+    .maps-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        padding: 0.5rem !important;
+    }
+
+    .map-card {
+        padding: 1rem !important;
+    }
+
+    .map-card h3 {
+        font-size: 1.2rem !important;
+    }
+
+    .map-card p {
+        font-size: 0.85rem !important;
+    }
+
+    .btn,
+    .buy-btn,
+    .details-btn {
+        padding: 0.7rem 1.2rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .price {
+        font-size: 1.3rem !important;
+    }
+}
+
+/* ==================== PROFILE PAGE ==================== */
+@media (max-width: 968px) {
+    .profile-container {
+        flex-direction: column !important;
+        padding: 1rem !important;
+    }
+
+    .profile-sidebar {
+        width: 100% !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .profile-content {
+        width: 100% !important;
+        padding: 1.5rem !important;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+
+    .profile-avatar {
+        width: 100px !important;
+        height: 100px !important;
+        margin: 0 auto 1rem !important;
+    }
+
+    .profile-info h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-card {
+        padding: 1rem !important;
+    }
+
+    .stat-value {
+        font-size: 1.8rem !important;
+    }
+}
+
+/* ==================== PURCHASES PAGE ==================== */
+@media (max-width: 968px) {
+    .purchases-container {
+        padding: 1rem !important;
+    }
+
+    .purchases-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+        gap: 1.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .purchases-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    .purchase-card {
+        padding: 1rem !important;
+    }
+
+    .purchase-card h3 {
+        font-size: 1.2rem !important;
+    }
+
+    .download-btn {
+        padding: 0.7rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ==================== NOTIFICATIONS PAGE ==================== */
+@media (max-width: 968px) {
+    .notifications-container {
+        padding: 1rem !important;
+        max-width: 100% !important;
+    }
+
+    .notification-item {
+        padding: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .notification-header {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+        align-items: flex-start !important;
+    }
+
+    .notification-title {
+        font-size: 1rem !important;
+    }
+
+    .notification-message {
+        font-size: 0.85rem !important;
+    }
+
+    .notification-time {
+        font-size: 0.75rem !important;
+    }
+}
+
+/* ==================== CHAT PAGE ==================== */
+@media (max-width: 968px) {
+    .chat-container {
+        flex-direction: column !important;
+        height: calc(100vh - 60px) !important;
+    }
+
+    .users-sidebar {
+        width: 100% !important;
+        max-height: 200px !important;
+        overflow-y: auto !important;
+        border-right: none !important;
+        border-bottom: 2px solid #333 !important;
+    }
+
+    .chat-main {
+        width: 100% !important;
+        flex: 1 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-header h3 {
+        font-size: 1.1rem !important;
+    }
+
+    .message-bubble {
+        max-width: 85% !important;
+        padding: 0.7rem !important;
+    }
+
+    .message-text {
+        font-size: 0.9rem !important;
+    }
+
+    .chat-input-container {
+        padding: 0.8rem !important;
+    }
+
+    .chat-input {
+        font-size: 0.9rem !important;
+        padding: 0.7rem !important;
+    }
+
+    .send-btn {
+        padding: 0.7rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ==================== CONTACT PAGE ==================== */
+@media (max-width: 968px) {
+    .contact-container {
+        padding: 1rem !important;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+
+    .contact-form {
+        padding: 2rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-form {
+        padding: 1.5rem !important;
+    }
+
+    .contact-form h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        font-size: 0.9rem !important;
+        padding: 0.8rem !important;
+    }
+
+    .contact-info-card {
+        padding: 1.5rem !important;
+    }
+}
+
+/* ==================== CREDITS PAGE ==================== */
+@media (max-width: 968px) {
+    .main-title h1 {
+        font-size: 3rem !important;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr !important;
+        padding: 1rem !important;
+    }
+
+    .credit-card {
+        padding: 2rem !important;
+    }
+
+    .stats-grid,
+    .tech-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .back-button {
+        top: 1rem !important;
+        left: 1rem !important;
+        padding: 0.8rem 1.5rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    .main-title h1 {
+        font-size: 2.5rem !important;
+    }
+
+    .main-title .subtitle {
+        font-size: 1.1rem !important;
+    }
+
+    .avatar-container {
+        width: 120px !important;
+        height: 120px !important;
+    }
+
+    .user-name {
+        font-size: 2rem !important;
+    }
+
+    .user-role {
+        font-size: 1.1rem !important;
+    }
+
+    .user-description {
+        font-size: 0.95rem !important;
+    }
+
+    .tech-tags {
+        gap: 0.7rem !important;
+    }
+
+    .tech-tag {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .social-links {
+        flex-direction: column !important;
+        gap: 1rem !important;
+    }
+
+    .social-link {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .stats-grid,
+    .tech-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-number {
+        font-size: 3rem !important;
+    }
+
+    .tech-icon {
+        font-size: 2.5rem !important;
+    }
+
+    .final-message {
+        padding: 2rem !important;
+    }
+
+    .final-message h3 {
+        font-size: 1.5rem !important;
+    }
+
+    .final-message p {
+        font-size: 1rem !important;
+    }
+}
+
+/* ==================== MODALS ==================== */
+@media (max-width: 968px) {
+    .modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 1rem !important;
+        padding: 2rem !important;
+    }
+
+    .modal-header h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .gallery-main img {
+        height: 250px !important;
+    }
+
+    .gallery-thumbnails {
+        gap: 0.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 1.5rem !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+    }
+
+    .modal-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+    }
+
+    .close-modal {
+        position: absolute !important;
+        top: 1rem !important;
+        right: 1rem !important;
+    }
+
+    .gallery-main img {
+        height: 200px !important;
+    }
+
+    .gallery-thumbnails {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+    }
+
+    .thumbnail {
+        min-width: 60px !important;
+        height: 60px !important;
+    }
+
+    .modal-price {
+        font-size: 1.5rem !important;
+    }
+
+    .modal-actions {
+        flex-direction: column !important;
+        gap: 0.8rem !important;
+    }
+
+    .modal-btn {
+        width: 100% !important;
+    }
+}
+
+/* ==================== FOOTER ==================== */
+@media (max-width: 968px) {
+    footer .footer-content {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 2rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    footer {
+        padding: 2rem 1rem !important;
+    }
+
+    footer .footer-content {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        text-align: center !important;
+    }
+
+    footer ul {
+        list-style: none !important;
+        padding: 0 !important;
+    }
+
+    footer h3,
+    footer h4 {
+        font-size: 1.2rem !important;
+    }
+
+    footer p,
+    footer a {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ==================== ADMIN DASHBOARD ==================== */
+@media (max-width: 968px) {
+    .admin-container {
+        flex-direction: column !important;
+    }
+
+    .admin-sidebar {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .admin-main {
+        margin-left: 0 !important;
+        padding: 1rem !important;
+    }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+    }
+
+    .table-container {
+        overflow-x: auto !important;
+    }
+
+    table {
+        font-size: 0.85rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-card {
+        padding: 1rem !important;
+    }
+
+    .admin-header h1 {
+        font-size: 1.5rem !important;
+    }
+
+    .admin-btn {
+        padding: 0.7rem 1rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem !important;
+        font-size: 0.8rem !important;
+    }
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+@media (max-width: 480px) {
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .show-mobile {
+        display: block !important;
+    }
+
+    .text-center-mobile {
+        text-align: center !important;
+    }
+
+    .full-width-mobile {
+        width: 100% !important;
+    }
+}
+
+/* ==================== TOUCH IMPROVEMENTS ==================== */
+@media (hover: none) and (pointer: coarse) {
+    /* Mejoras para dispositivos táctiles */
+    button,
+    a,
+    .clickable {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+
+    input,
+    textarea,
+    select {
+        font-size: 16px !important; /* Previene zoom en iOS */
+    }
+}
+
+/* ==================== LANDSCAPE MODE (Mobile) ==================== */
+@media (max-width: 968px) and (orientation: landscape) {
+    .hero {
+        min-height: auto !important;
+        padding: 2rem 1rem !important;
+    }
+
+    .modal-content {
+        max-height: 85vh !important;
+        overflow-y: auto !important;
+    }
+
+    .chat-container {
+        height: calc(100vh - 50px) !important;
+    }
+}

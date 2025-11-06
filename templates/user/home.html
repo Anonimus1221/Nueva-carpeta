@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H. Builds - Inicio</title>
+    <link rel="stylesheet" href="/static/css/home.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="/static/css/responsive.css?v=<?php echo time(); ?>">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        /* ESTILOS DEL MENÚ LATERAL MÓVIL */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a0a0a 100%);
+            box-shadow: -5px 0 30px rgba(255, 51, 51, 0.3);
+            z-index: 9999;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+        
+        .mobile-sidebar.active {
+            right: 0;
+        }
+        
+        .mobile-sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid rgba(255, 51, 51, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(255, 51, 51, 0.1);
+        }
+        
+        .mobile-sidebar-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #ff3333;
+        }
+        
+        .mobile-sidebar-header .user-info h3 {
+            margin: 0;
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .mobile-sidebar-header .user-info p {
+            margin: 0;
+            color: #ff3333;
+            font-size: 0.85rem;
+        }
+        
+        .mobile-sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .mobile-sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .mobile-sidebar-menu a:hover {
+            background: rgba(255, 51, 51, 0.2);
+            border-left-color: #ff3333;
+            padding-left: 2rem;
+        }
+        
+        .mobile-sidebar-menu a .icon {
+            font-size: 1.3rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .mobile-sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 1rem;
+            border-top: 2px solid rgba(255, 51, 51, 0.3);
+        }
+        
+        .mobile-sidebar-footer button {
+            width: 100%;
+            padding: 0.8rem;
+            background: #ff3333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-sidebar-footer button:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 10000;
+        }
+        
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: #ff3333;
+            display: block;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        @media screen and (max-width: 968px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .user-menu {
+                display: none !important;
+            }
+            
+            nav .nav-links {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+
+    <!-- OVERLAY PARA CERRAR MENÚ MÓVIL -->
+    <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+
+    <!-- MENÚ LATERAL PARA MÓVIL -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <img src="{{ user.profile_picture if user.profile_picture else '/static/image/default-avatar.png' }}" alt="{{ user.name }}">
+            <div class="user-info">
+                <h3>{{ user.name }}</h3>
+                <p>Bienvenido de vuelta</p>
+            </div>
+        </div>
+        
+        <nav class="mobile-sidebar-menu">
+            <a href="/home" onclick="closeMobileMenu()">
+                <span class="icon">🏠</span>
+                <span>Inicio</span>
+            </a>
+            <a href="#mapas" onclick="closeMobileMenu(); scrollToMaps()">
+                <span class="icon">🗺️</span>
+                <span>Mapas</span>
+            </a>
+            <a href="/chat" onclick="closeMobileMenu()">
+                <span class="icon">💬</span>
+                <span>Chat Global</span>
+            </a>
+            <a href="/purchases" onclick="closeMobileMenu()">
+                <span class="icon">🛒</span>
+                <span>Mis Compras</span>
+            </a>
+            <a href="/notifications" onclick="closeMobileMenu()">
+                <span class="icon">🔔</span>
+                <span>Notificaciones</span>
+                <span id="mobileBadge" class="notif-badge" style="margin-left: auto; background: #ff3333; color: #fff; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.75rem;">0</span>
+            </a>
+            <a href="/profile" onclick="closeMobileMenu()">
+                <span class="icon">👤</span>
+                <span>Mi Perfil</span>
+            </a>
+            <a href="/info" onclick="closeMobileMenu()">
+                <span class="icon">ℹ️</span>
+                <span>Información</span>
+            </a>
+            <a href="/help" onclick="closeMobileMenu()">
+                <span class="icon">❓</span>
+                <span>Ayuda</span>
+            </a>
+            {% if user.is_admin %}
+            <a href="/admin" onclick="closeMobileMenu()">
+                <span class="icon">⚙️</span>
+                <span>Panel Admin</span>
+            </a>
+            {% endif %}
+        </nav>
+        
+        <div class="mobile-sidebar-footer">
+            <button onclick="logout()">🚪 Cerrar Sesión</button>
+        </div>
+    </aside>
+
+    <!-- NAVBAR PRINCIPAL -->
+    <header>
+        <nav>
+            <div class="logo">
+                <span>🏗️</span> H. Builds
+            </div>
+            
+            <!-- Botón hamburguesa para móvil (solo visible en móvil) -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <!-- Enlaces de navegación (ocultos en móvil) -->
+            <ul class="nav-links">
+                <li><a href="/home">🏠 Inicio</a></li>
+                <li><a href="#mapas">🗺️ Mapas</a></li>
+                <li><a href="/chat">💬 Chat Global</a></li>
+                <li><a href="/purchases">🛒 Mis Compras</a></li>
+                <li><a href="/notifications">🔔 Notificaciones <span id="notifBadge" class="notif-badge">0</span></a></li>
+                <li><a href="/profile">👤 Mi Perfil</a></li>
+                <li><a href="/info">ℹ️ Información</a></li>
+                <li><a href="/help">❓ Ayuda</a></li>
+                {% if user.is_admin %}
+                <li><a href="/admin">⚙️ Admin</a></li>
+                {% endif %}
+            </ul>
+            
+            <!-- Menú de usuario (oculto en móvil) -->
+            <div class="user-menu">
+                <img src="{{ user.profile_picture if user.profile_picture else '/static/image/default-avatar.png' }}" 
+                     alt="{{ user.name }}" class="nav-avatar">
+                <span class="user-name">{{ user.name }}</span>
+                <button class="btn btn-logout" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </nav>
+    </header>
+
+    <script>
+        // Función para abrir/cerrar el menú móvil
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            const btn = document.getElementById('mobileMenuBtn');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            btn.classList.toggle('active');
+            
+            // Prevenir scroll del body cuando el menú está abierto
+            if (sidebar.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Función para cerrar el menú móvil
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            const btn = document.getElementById('mobileMenuBtn');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            btn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Función para scroll suave a mapas
+        function scrollToMaps() {
+            const mapsSection = document.getElementById('mapas');
+            if (mapsSection) {
+                mapsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Cerrar menú con tecla ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+    </script>
+
+    <!-- BIENVENIDA -->
+    <section class="welcome-section" id="inicio">
+        <div class="welcome-container">
+            <h1>¡Bienvenido de nuevo, {{ user.name }}! 🎮</h1>
+            <p>Explora nuestros mapas premium y disfruta de la mejor experiencia en Minecraft</p>
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">🗺️</span>
+                    <div>
+                        <h3>{{ user_purchases }}</h3>
+                        <p>Mapas Comprados</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">💬</span>
+                    <div>
+                        <h3>{{ user_comments }}</h3>
+                        <p>Comentarios</p>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⭐</span>
+                    <div>
+                        <h3>{{ maps|length }}</h3>
+                        <p>Disponibles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATÁLOGO DE MAPAS CON CARRUSEL -->
+    <section class="maps-section" id="mapas">
+        <h2 class="section-title">🗺️ Nuestros Mapas Premium</h2>
+        <p class="section-subtitle">Descubre mundos increíbles - Premium y Gratis</p>
+        
+        <div class="maps-grid">
+            {% if maps %}
+                {% for map in maps %}
+                <div class="map-card">
+                    {% if map.is_featured %}
+                    <span class="map-badge">✨ NUEVO</span>
+                    {% elif not map.is_premium %}
+                    <span class="map-badge" style="background: #4caf50;">🎁 GRATIS</span>
+                    {% endif %}
+                    
+                    <!-- Carrusel de Imágenes (si tiene gallery_images) -->
+                    {% if map.gallery_images %}
+                    <div class="map-carousel">
+                        {% set gallery = map.gallery_images | from_json %}
+                        {% for img_url in gallery %}
+                        <img src="{{ img_url }}" class="map-image {% if loop.first %}active{% endif %}" alt="{{ map.title }} {{ loop.index }}">
+                        {% endfor %}
+                        <button class="carousel-btn prev" onclick="changeSlide(-1, event)">❮</button>
+                        <button class="carousel-btn next" onclick="changeSlide(1, event)">❯</button>
+                    </div>
+                    {% else %}
+                    <!-- Imagen única si no tiene galería -->
+                    <div class="map-carousel">
+                        <img src="{{ map.image }}" class="map-image active" alt="{{ map.title }}">
+                    </div>
+                    {% endif %}
+
+                    <div class="map-content">
+                        <h3 class="map-title">{{ map.title }}</h3>
+                        <p class="map-description">{{ map.description[:100] }}...</p>
+                        
+                        <div class="map-footer">
+                            <span class="map-price">
+                                {% if map.price > 0 %}
+                                    ${{ map.price }} USD
+                                {% else %}
+                                    GRATIS
+                                {% endif %}
+                            </span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn-details" onclick="openMapModal({{ map.id }})">👁️ Ver Detalles</button>
+                                {% if map.price > 0 %}
+                                    <button class="buy-button" onclick="buyMap({{ map.id }}, '{{ map.title }}', {{ map.price }})">🛒 Comprar</button>
+                                {% else %}
+                                    <button class="download-button" onclick="downloadMap({{ map.id }}, '{{ map.title }}')">⬇️ Descargar</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center; color: #aaa;">No hay mapas disponibles actualmente.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Modal de Detalles del Mapa -->
+    <div id="mapModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" onclick="closeMapModal()">&times;</span>
+            <div id="mapModalContent">
+                <!-- Se llenará dinámicamente con JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE COMENTARIOS -->
+    <div id="commentsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeComments()">&times;</span>
+            <h2>💬 Comentarios</h2>
+            <div id="commentsContent">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <div class="add-comment-section">
+                <h3>Agregar Comentario</h3>
+                <div class="rating-selector">
+                    <label>Calificación:</label>
+                    <div class="stars-input" id="ratingStars">
+                        <span class="star-input" data-rating="1">☆</span>
+                        <span class="star-input" data-rating="2">☆</span>
+                        <span class="star-input" data-rating="3">☆</span>
+                        <span class="star-input" data-rating="4">☆</span>
+                        <span class="star-input" data-rating="5">☆</span>
+                    </div>
+                </div>
+                <textarea id="commentText" placeholder="Escribe tu comentario..." maxlength="500"></textarea>
+                <button class="btn btn-primary" onclick="submitComment()">Enviar Comentario</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE NOTIFICACIONES -->
+    <div id="notificationsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeNotifications()">&times;</span>
+            <h2>🔔 Notificaciones</h2>
+            <div id="notificationsContent">
+                <div class="notification-item new">
+                    <span class="notif-icon">🎉</span>
+                    <div class="notif-text">
+                        <strong>¡Bienvenido!</strong>
+                        <p>Gracias por unirte a H. Builds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHAT GLOBAL FLOTANTE -->
+    <!-- BOTÓN FLOTANTE DE CHAT -->
+    <a href="/chat" class="floating-chat-btn" title="Ir al Chat Global">
+        💬
+        <span class="chat-badge">¡Nuevo!</span>
+    </a>
+
+    <!-- FOOTER CON CRÉDITOS -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>🏗️ H. Builds</h3>
+                <p>Mapas premium de Minecraft desde 2023</p>
+                <p>📧 <a href="mailto:contacthectorbuilds@gmail.com" style="color: #ff3333; text-decoration: none;">contacthectorbuilds@gmail.com</a></p>
+            </div>
+            <div class="footer-section">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#mapas">Mapas</a></li>
+                    <li><a href="/profile">Mi Perfil</a></li>
+                    <li><a href="/credits">✨ Créditos</a></li>
+                    <li><a href="/contact">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-section credits">
+                <h4>Créditos</h4>
+                <p>🎨 <strong>Creador de Mapas:</strong> H. Builds</p>
+                <p>💻 <strong>Programador:</strong> Programer</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 H. Builds. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/home.js"></script>
+    <!-- Variables globales para JavaScript -->
+    <script>
+        // Variables de usuario inyectadas desde Jinja2
+        window.userData = {
+            name: "{{ user.name }}",
+            id: {{ user.id }},
+            avatar: "{{ user.profile_picture if user.profile_picture else '/static/image/default-avatar.png' }}"
+        };
+
+        // ==================== CARRUSEL AUTOMÁTICO ====================
+        let currentSlide = 0;
+        let currentModalSlide = 0;
+        const slides = document.querySelectorAll('.map-carousel .map-image');
+        const modalSlides = document.querySelectorAll('.modal-gallery .gallery-image');
+        const thumbnails = document.querySelectorAll('.thumbnails img');
+
+        // Carrusel automático de la tarjeta
+        function autoSlide() {
+            if (slides.length > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+        }
+
+        setInterval(autoSlide, 3000); // Cambia cada 3 segundos
+
+        // Cambiar slide manualmente en la tarjeta
+        function changeSlide(direction, event) {
+            event.stopPropagation();
+            if (slides.length > 0) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + direction + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+        }
+
+        // Cambiar slide en el modal
+        function changeModalSlide(direction) {
+            if (modalSlides.length > 0) {
+                modalSlides[currentModalSlide].classList.remove('active');
+                thumbnails[currentModalSlide].classList.remove('active');
+                currentModalSlide = (currentModalSlide + direction + modalSlides.length) % modalSlides.length;
+                modalSlides[currentModalSlide].classList.add('active');
+                thumbnails[currentModalSlide].classList.add('active');
+            }
+        }
+
+        // Ir a un slide específico
+        function goToSlide(index) {
+            if (modalSlides.length > 0) {
+                modalSlides[currentModalSlide].classList.remove('active');
+                thumbnails[currentModalSlide].classList.remove('active');
+                currentModalSlide = index;
+                modalSlides[currentModalSlide].classList.add('active');
+                thumbnails[currentModalSlide].classList.add('active');
+            }
+        }
+
+        // ==================== MODAL ====================
+        // Funciones de modal movidas a home.js
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('mapModal');
+            if (event.target == modal) {
+                closeMapModal();
+            }
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMapModal();
+            }
+        });
+    </script>
+</body>
+</html>

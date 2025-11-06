@@ -1,0 +1,1569 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0505 50%, #0a0a0a 100%);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 2rem 0;
+}
+
+/* Partículas de fondo */
+.particles {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 51, 51, 0.3);
+    border-radius: 50%;
+    animation: float 6s infinite ease-in-out;
+}
+
+/* Contenedor principal */
+.login-container {
+    display: flex;
+    max-width: 900px;
+    width: 90%;
+    max-height: none;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(255, 51, 51, 0.3);
+    border: 2px solid rgba(255, 51, 51, 0.3);
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Caja de login */
+.login-box {
+    flex: 1;
+    padding: 2.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    animation: slideInLeft 0.8s ease-out;
+}
+
+/* Logo superior */
+.top-logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Contenedor para la imagen y partículas */
+.logo-image-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1rem;
+    animation: containerPulse 4s ease-in-out infinite;
+}
+
+/* Anillos orbitales animados */
+.logo-image-container::before,
+.logo-image-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    pointer-events: none;
+    animation: ringExpand 3s ease-in-out infinite;
+}
+
+.logo-image-container::before {
+    width: 140px;
+    height: 140px;
+    margin-left: -70px;
+    margin-top: -70px;
+    border-color: rgba(100, 200, 255, 0.3);
+    animation: ringExpand 3s ease-in-out infinite, rainbowRing 6s linear infinite;
+}
+
+.logo-image-container::after {
+    width: 160px;
+    height: 160px;
+    margin-left: -80px;
+    margin-top: -80px;
+    border-color: rgba(255, 100, 200, 0.2);
+    animation: ringExpand 3s ease-in-out infinite 1.5s, rainbowRing 6s linear infinite reverse;
+}
+
+@keyframes containerPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes ringExpand {
+    0%, 100% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+@keyframes rainbowRing {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+/* Partículas orbitales (protones) */
+.orbit-particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    margin-top: -9px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    animation-timing-function: ease-in-out;
+}
+
+/* Efecto de estela/rastro para las partículas - múltiples capas */
+.orbit-particle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 5px;
+    margin-top: -2.5px;
+    margin-left: -25px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.5;
+    filter: blur(10px);
+    animation: trailPulse 1s infinite ease-in-out;
+}
+
+.orbit-particle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90px;
+    height: 4px;
+    margin-top: -2px;
+    margin-left: -45px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.3;
+    filter: blur(20px);
+    animation: trailPulse 1s infinite ease-in-out 0.5s;
+}
+
+@keyframes trailPulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scaleX(0.8);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scaleX(1.2);
+    }
+}
+
+/* Partícula 1 - Rojo */
+.orbit-particle:nth-child(1) {
+    background: radial-gradient(circle, #ff0000, #ff0000);
+    box-shadow: 0 0 20px #ff0000, 0 0 35px #ff0000, 0 0 50px rgba(255, 0, 0, 0.5);
+    animation: orbit1 3.5s linear infinite;
+}
+
+/* Partícula 2 - Naranja */
+.orbit-particle:nth-child(2) {
+    background: radial-gradient(circle, #ff6600, #ff6600);
+    box-shadow: 0 0 20px #ff6600, 0 0 35px #ff6600, 0 0 50px rgba(255, 102, 0, 0.5);
+    animation: orbit2 3.5s linear infinite;
+}
+
+/* Partícula 3 - Amarillo */
+.orbit-particle:nth-child(3) {
+    background: radial-gradient(circle, #ffcc00, #ffcc00);
+    box-shadow: 0 0 20px #ffcc00, 0 0 35px #ffcc00, 0 0 50px rgba(255, 204, 0, 0.5);
+    animation: orbit3 3.5s linear infinite;
+}
+
+/* Partícula 4 - Verde */
+.orbit-particle:nth-child(4) {
+    background: radial-gradient(circle, #00ff00, #00ff00);
+    box-shadow: 0 0 20px #00ff00, 0 0 35px #00ff00, 0 0 50px rgba(0, 255, 0, 0.5);
+    animation: orbit4 3.5s linear infinite;
+}
+
+/* Partícula 5 - Cian */
+.orbit-particle:nth-child(5) {
+    background: radial-gradient(circle, #00ffff, #00ffff);
+    box-shadow: 0 0 20px #00ffff, 0 0 35px #00ffff, 0 0 50px rgba(0, 255, 255, 0.5);
+    animation: orbit5 3.5s linear infinite;
+}
+
+/* Partícula 6 - Azul */
+.orbit-particle:nth-child(6) {
+    background: radial-gradient(circle, #0066ff, #0066ff);
+    box-shadow: 0 0 20px #0066ff, 0 0 35px #0066ff, 0 0 50px rgba(0, 102, 255, 0.5);
+    animation: orbit6 3.5s linear infinite;
+}
+
+/* Partícula 7 - Morado */
+.orbit-particle:nth-child(7) {
+    background: radial-gradient(circle, #aa00ff, #aa00ff);
+    box-shadow: 0 0 20px #aa00ff, 0 0 35px #aa00ff, 0 0 50px rgba(170, 0, 255, 0.5);
+    animation: orbit7 3.5s linear infinite;
+}
+
+/* Partícula 8 - Rosa */
+.orbit-particle:nth-child(8) {
+    background: radial-gradient(circle, #ff00ff, #ff00ff);
+    box-shadow: 0 0 20px #ff00ff, 0 0 35px #ff00ff, 0 0 50px rgba(255, 0, 255, 0.5);
+    animation: orbit8 3.5s linear infinite;
+}
+
+/* Animaciones de órbita para cada partícula - con variaciones de distancia */
+@keyframes orbit1 {
+    0% {
+        transform: rotate(0deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(90deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(180deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(270deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(360deg) translateX(75px);
+    }
+}
+
+@keyframes orbit2 {
+    0% {
+        transform: rotate(45deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(135deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(225deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(315deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(405deg) translateX(75px);
+    }
+}
+
+@keyframes orbit3 {
+    0% {
+        transform: rotate(90deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(180deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(270deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(360deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(450deg) translateX(75px);
+    }
+}
+
+@keyframes orbit4 {
+    0% {
+        transform: rotate(135deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(225deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(315deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(405deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(495deg) translateX(75px);
+    }
+}
+
+@keyframes orbit5 {
+    0% {
+        transform: rotate(180deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(270deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(360deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(450deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(540deg) translateX(75px);
+    }
+}
+
+@keyframes orbit6 {
+    0% {
+        transform: rotate(225deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(315deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(405deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(495deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(585deg) translateX(75px);
+    }
+}
+
+@keyframes orbit7 {
+    0% {
+        transform: rotate(270deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(360deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(450deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(540deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(630deg) translateX(75px);
+    }
+}
+
+@keyframes orbit8 {
+    0% {
+        transform: rotate(315deg) translateX(75px);
+    }
+    25% {
+        transform: rotate(405deg) translateX(80px);
+    }
+    50% {
+        transform: rotate(495deg) translateX(75px);
+    }
+    75% {
+        transform: rotate(585deg) translateX(70px);
+    }
+    100% {
+        transform: rotate(675deg) translateX(75px);
+    }
+}
+
+.logo-image-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    animation: floatLogo 3s infinite ease-in-out, 
+               pulseImage 2s infinite ease-in-out, 
+               rotateGlow 4s linear infinite,
+               borderRainbow 3s linear infinite;
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 5;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3), 
+                0 0 50px rgba(100, 200, 255, 0.2),
+                0 0 70px rgba(255, 100, 200, 0.1),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.logo-image-container:hover img {
+    transform: scale(1.15) rotate(10deg);
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.6), 
+                0 0 80px rgba(100, 200, 255, 0.5),
+                0 0 100px rgba(255, 100, 200, 0.3),
+                inset 0 0 50px rgba(255, 255, 255, 0.3);
+    animation: floatLogo 1.5s infinite ease-in-out, 
+               pulseImage 1s infinite ease-in-out, 
+               rotateGlow 2s linear infinite,
+               borderRainbow 1.5s linear infinite,
+               shake 0.5s infinite;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: scale(1.15) rotate(10deg);
+    }
+    25% {
+        transform: scale(1.15) rotate(12deg) translateX(2px);
+    }
+    75% {
+        transform: scale(1.15) rotate(8deg) translateX(-2px);
+    }
+}
+
+@keyframes borderRainbow {
+    0% {
+        border-color: rgba(255, 0, 0, 0.5);
+    }
+    14% {
+        border-color: rgba(255, 127, 0, 0.5);
+    }
+    28% {
+        border-color: rgba(255, 255, 0, 0.5);
+    }
+    42% {
+        border-color: rgba(0, 255, 0, 0.5);
+    }
+    57% {
+        border-color: rgba(0, 255, 255, 0.5);
+    }
+    71% {
+        border-color: rgba(0, 0, 255, 0.5);
+    }
+    85% {
+        border-color: rgba(139, 0, 255, 0.5);
+    }
+    100% {
+        border-color: rgba(255, 0, 0, 0.5);
+    }
+}
+
+.logo-text {
+    text-align: center;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #ff8c00;
+    text-shadow: 0 0 25px rgba(255, 140, 0, 0.9), 0 0 40px rgba(255, 140, 0, 0.6);
+    margin-bottom: 0.3rem;
+    margin-top: 0.5rem;
+}
+
+.logo-title span:first-child {
+    font-size: 2.8rem;
+    display: inline-block;
+    animation: bounce 2s infinite ease-in-out, emojiSpin 4s infinite ease-in-out;
+    filter: drop-shadow(0 0 15px rgba(255, 140, 0, 0.8));
+}
+
+@keyframes emojiSpin {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-10px) rotate(10deg);
+    }
+    50% {
+        transform: translateY(0) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-10px) rotate(-10deg);
+    }
+}
+
+.logo-title span:last-child {
+    color: #ff8c00;
+    letter-spacing: 0.1rem;
+    animation: textGlow 2s ease-in-out infinite;
+}
+
+@keyframes textGlow {
+    0%, 100% {
+        text-shadow: 0 0 25px rgba(255, 140, 0, 0.9), 0 0 40px rgba(255, 140, 0, 0.6);
+    }
+    50% {
+        text-shadow: 0 0 35px rgba(255, 140, 0, 1), 0 0 60px rgba(255, 140, 0, 0.8), 0 0 80px rgba(255, 140, 0, 0.5);
+    }
+}
+
+.logo-subtitle {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin: 0 0 1rem 0;
+}
+
+
+
+@keyframes floatLogo {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    25% {
+        transform: translateY(-8px) rotate(2deg);
+    }
+    50% {
+        transform: translateY(-15px) rotate(0deg);
+    }
+    75% {
+        transform: translateY(-8px) rotate(-2deg);
+    }
+}
+
+@keyframes pulseImage {
+    0%, 100% {
+        filter: brightness(1) contrast(1);
+    }
+    50% {
+        filter: brightness(1.1) contrast(1.1);
+    }
+}
+
+@keyframes rotateGlow {
+    0% {
+        filter: hue-rotate(0deg) saturate(1);
+    }
+    100% {
+        filter: hue-rotate(360deg) saturate(1);
+    }
+}
+
+
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.logo-section {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff3333;
+    text-shadow: 0 0 20px rgba(255, 51, 51, 0.8);
+    margin-bottom: 0.5rem;
+}
+
+.logo span {
+    font-size: 2.5rem;
+    display: inline-block;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.subtitle {
+    color: #aaa;
+    font-size: 0.9rem;
+    padding-left: 3.5rem;
+}
+
+.login-box h2 {
+    color: #fff;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* Mensaje de bienvenida en registro */
+.welcome-message {
+    background: linear-gradient(135deg, rgba(255, 51, 51, 0.1), rgba(255, 140, 0, 0.1));
+    border: 2px solid rgba(255, 140, 0, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.welcome-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+.welcome-text {
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.benefits-badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.badge:hover {
+    background: rgba(255, 140, 0, 0.3);
+    border-color: rgba(255, 140, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Botón de Google */
+.google-btn-container {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+}
+
+.google-btn-wrapper {
+    width: 100%;
+    max-width: 320px;
+}
+
+/* Estilos para el botón oficial de Google */
+.google-btn-container #g_id_onload {
+    display: none;
+}
+
+.google-btn-container .g_id_signin {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* Contenedor del iframe de Google */
+.google-btn-container .g_id_signin > div {
+    width: 100% !important;
+}
+
+/* Wrapper del botón de Google */
+.google-btn-container .g_id_signin iframe {
+    width: 100% !important;
+    min-width: 200px !important;
+    height: 48px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.google-btn-container .g_id_signin iframe:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(66, 133, 244, 0.5) !important;
+}
+
+.google-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.google-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(66, 133, 244, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.google-btn:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.google-btn:hover {
+    border-color: #4285F4;
+    box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+    transform: translateY(-2px);
+}
+
+.google-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Divisor */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: #999;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 51, 51, 0.3), transparent);
+}
+
+.divider span {
+    padding: 0 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+}
+
+/* Formulario */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #ccc;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.input-icon {
+    width: 18px;
+    height: 18px;
+    color: #ff3333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.9rem;
+    border: 2px solid rgba(255, 51, 51, 0.3);
+    border-radius: 10px;
+    background: rgba(30, 30, 30, 0.8);
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff3333;
+    box-shadow: 0 0 15px rgba(255, 51, 51, 0.3);
+    background: rgba(40, 40, 40, 0.9);
+}
+
+.form-group input::placeholder {
+    color: #666;
+}
+
+/* Opciones del formulario */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #ff3333;
+}
+
+/* Checkbox con label (términos y condiciones) */
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label:hover {
+    color: #fff;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    cursor: pointer;
+    accent-color: #ff3333;
+    margin-top: 2px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-label input[type="checkbox"]:hover {
+    transform: scale(1.1);
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    animation: checkPulse 0.3s ease;
+}
+
+@keyframes checkPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.checkbox-label span {
+    flex: 1;
+}
+
+.checkbox-label .link {
+    color: #ff6666;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.checkbox-label .link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(90deg, #ff3333, #ff8c00);
+    transition: width 0.3s ease;
+}
+
+.checkbox-label .link:hover {
+    color: #ff8c00;
+}
+
+.checkbox-label .link:hover::after {
+    width: 100%;
+}
+
+.forgot-password {
+    color: #ff3333;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forgot-password:hover {
+    color: #ff6666;
+    text-decoration: underline;
+}
+
+/* Botones */
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff3333, #cc0000);
+    color: white;
+    box-shadow: 0 5px 20px rgba(255, 51, 51, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(255, 51, 51, 0.6);
+}
+
+/* Enlaces */
+.signup-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #aaa;
+    font-size: 0.95rem;
+}
+
+.signup-link a {
+    color: #ff3333;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+.back-home {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.back-home a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.back-home a svg {
+    width: 20px;
+    height: 20px;
+}
+
+.back-home a:hover {
+    color: #ff3333;
+}
+
+/* Panel lateral */
+.side-panel {
+    flex: 1;
+    background: linear-gradient(135deg, #ff3333, #cc0000);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    animation: slideInRight 0.8s ease-out;
+}
+
+.side-panel::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: float 8s infinite ease-in-out;
+}
+
+.side-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.side-content h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-weight: 700;
+}
+
+.subtitle-programmer {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+    color: #ffd700;
+    font-weight: 400;
+}
+
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.github-link:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.github-link svg {
+    width: 28px;
+    height: 28px;
+}
+
+.side-content p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+/* Contenedor de la imagen del personaje */
+.character-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 1.5rem;
+    animation: containerPulse 4s ease-in-out infinite;
+}
+
+/* Anillos orbitales animados para el personaje */
+.character-container::before,
+.character-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    pointer-events: none;
+    animation: ringExpand 3s ease-in-out infinite;
+}
+
+.character-container::before {
+    width: 210px;
+    height: 210px;
+    margin-left: -105px;
+    margin-top: -105px;
+    border-color: rgba(255, 100, 100, 0.3);
+    animation: ringExpand 3s ease-in-out infinite, rainbowRing 6s linear infinite;
+}
+
+.character-container::after {
+    width: 240px;
+    height: 240px;
+    margin-left: -120px;
+    margin-top: -120px;
+    border-color: rgba(100, 255, 200, 0.2);
+    animation: ringExpand 3s ease-in-out infinite 1.5s, rainbowRing 6s linear infinite reverse;
+}
+
+/* Imagen del personaje */
+.character-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    animation: floatLogo 3s infinite ease-in-out, 
+               pulseImage 2s infinite ease-in-out, 
+               rotateGlow 4s linear infinite,
+               borderRainbow 3s linear infinite;
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 5;
+    box-shadow: 0 0 30px rgba(255, 51, 51, 0.3), 
+                0 0 50px rgba(255, 100, 200, 0.2),
+                0 0 70px rgba(100, 200, 255, 0.1),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+    object-fit: cover;
+}
+
+.character-container:hover .character-image {
+    transform: scale(1.15) rotate(10deg);
+    box-shadow: 0 0 50px rgba(255, 51, 51, 0.6), 
+                0 0 80px rgba(255, 100, 200, 0.5),
+                0 0 100px rgba(100, 200, 255, 0.3),
+                inset 0 0 50px rgba(255, 255, 255, 0.3);
+    animation: floatLogo 1.5s infinite ease-in-out, 
+               pulseImage 1s infinite ease-in-out, 
+               rotateGlow 2s linear infinite,
+               borderRainbow 1.5s linear infinite,
+               shake 0.5s infinite;
+}
+
+/* Partículas orbitales para el personaje */
+.orbit-particle-char {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    margin-left: -9px;
+    margin-top: -9px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    animation-timing-function: ease-in-out;
+}
+
+/* Efecto de estela/rastro para las partículas del personaje */
+.orbit-particle-char::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 5px;
+    margin-top: -2.5px;
+    margin-left: -25px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.5;
+    filter: blur(10px);
+    animation: trailPulse 1s infinite ease-in-out;
+}
+
+.orbit-particle-char::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90px;
+    height: 4px;
+    margin-top: -2px;
+    margin-left: -45px;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.3;
+    filter: blur(20px);
+    animation: trailPulse 1s infinite ease-in-out 0.5s;
+}
+
+/* Colores de las partículas del personaje */
+.orbit-particle-char:nth-child(1) {
+    background: radial-gradient(circle, #ff0000, #ff0000);
+    box-shadow: 0 0 25px #ff0000, 0 0 40px #ff0000, 0 0 60px rgba(255, 0, 0, 0.6);
+    animation: orbitChar1 3s linear infinite, particlePulse 1s ease-in-out infinite;
+}
+
+.orbit-particle-char:nth-child(2) {
+    background: radial-gradient(circle, #ff6600, #ff6600);
+    box-shadow: 0 0 25px #ff6600, 0 0 40px #ff6600, 0 0 60px rgba(255, 102, 0, 0.6);
+    animation: orbitChar2 3s linear infinite, particlePulse 1s ease-in-out infinite 0.125s;
+}
+
+.orbit-particle-char:nth-child(3) {
+    background: radial-gradient(circle, #ffcc00, #ffcc00);
+    box-shadow: 0 0 25px #ffcc00, 0 0 40px #ffcc00, 0 0 60px rgba(255, 204, 0, 0.6);
+    animation: orbitChar3 3s linear infinite, particlePulse 1s ease-in-out infinite 0.25s;
+}
+
+.orbit-particle-char:nth-child(4) {
+    background: radial-gradient(circle, #00ff00, #00ff00);
+    box-shadow: 0 0 25px #00ff00, 0 0 40px #00ff00, 0 0 60px rgba(0, 255, 0, 0.6);
+    animation: orbitChar4 3s linear infinite, particlePulse 1s ease-in-out infinite 0.375s;
+}
+
+.orbit-particle-char:nth-child(5) {
+    background: radial-gradient(circle, #00ffff, #00ffff);
+    box-shadow: 0 0 25px #00ffff, 0 0 40px #00ffff, 0 0 60px rgba(0, 255, 255, 0.6);
+    animation: orbitChar5 3s linear infinite, particlePulse 1s ease-in-out infinite 0.5s;
+}
+
+.orbit-particle-char:nth-child(6) {
+    background: radial-gradient(circle, #0066ff, #0066ff);
+    box-shadow: 0 0 25px #0066ff, 0 0 40px #0066ff, 0 0 60px rgba(0, 102, 255, 0.6);
+    animation: orbitChar6 3s linear infinite, particlePulse 1s ease-in-out infinite 0.625s;
+}
+
+.orbit-particle-char:nth-child(7) {
+    background: radial-gradient(circle, #aa00ff, #aa00ff);
+    box-shadow: 0 0 25px #aa00ff, 0 0 40px #aa00ff, 0 0 60px rgba(170, 0, 255, 0.6);
+    animation: orbitChar7 3s linear infinite, particlePulse 1s ease-in-out infinite 0.75s;
+}
+
+.orbit-particle-char:nth-child(8) {
+    background: radial-gradient(circle, #ff00ff, #ff00ff);
+    box-shadow: 0 0 25px #ff00ff, 0 0 40px #ff00ff, 0 0 60px rgba(255, 0, 255, 0.6);
+    animation: orbitChar8 3s linear infinite, particlePulse 1s ease-in-out infinite 0.875s;
+}
+
+/* Animaciones de órbita para las partículas del personaje - radio 110px */
+@keyframes orbitChar1 {
+    0% {
+        transform: rotate(0deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(90deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(180deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(270deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(360deg) translateX(110px);
+    }
+}
+
+@keyframes orbitChar2 {
+    0% {
+        transform: rotate(45deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(135deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(225deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(315deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(405deg) translateX(110px);
+    }
+}
+
+@keyframes orbitChar3 {
+    0% {
+        transform: rotate(90deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(180deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(270deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(360deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(450deg) translateX(110px);
+    }
+}
+
+@keyframes orbitChar4 {
+    0% {
+        transform: rotate(135deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(225deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(315deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(405deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(495deg) translateX(110px);
+    }
+}
+
+@keyframes orbitChar5 {
+    0% {
+        transform: rotate(180deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(270deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(360deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(450deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(540deg) translateX(110px);
+    }
+}
+
+@keyframes orbitChar6 {
+    0% {
+        transform: rotate(225deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(315deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(405deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(495deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(585deg) translateX(110px);
+    }
+}
+
+@keyframes orbitChar7 {
+    0% {
+        transform: rotate(270deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(360deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(450deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(540deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(630deg) translateX(110px);
+    }
+}
+
+@keyframes orbitChar8 {
+    0% {
+        transform: rotate(315deg) translateX(110px);
+    }
+    25% {
+        transform: rotate(405deg) translateX(115px);
+    }
+    50% {
+        transform: rotate(495deg) translateX(110px);
+    }
+    75% {
+        transform: rotate(585deg) translateX(105px);
+    }
+    100% {
+        transform: rotate(675deg) translateX(110px);
+    }
+}
+
+@keyframes rotateGlow {
+    0% {
+        filter: hue-rotate(0deg) brightness(1.1);
+    }
+    100% {
+        filter: hue-rotate(360deg) brightness(1.1);
+    }
+}
+
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feature-item:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: translateX(8px);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.feature-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #cc0000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+    .login-container {
+        flex-direction: column;
+        width: 95%;
+    }
+
+    .side-panel {
+        display: none;
+    }
+
+    .login-box {
+        padding: 2rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .login-box h2 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-box {
+        padding: 1.5rem;
+    }
+
+    .form-options {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}
