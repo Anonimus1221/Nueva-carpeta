@@ -2,6 +2,11 @@
 
 ## 📋 Comandos de Build y Start
 
+### Opción 1: Usando render.yaml (Recomendado)
+El proyecto ya incluye `render.yaml` con toda la configuración. Render lo detectará automáticamente.
+
+### Opción 2: Configuración Manual en Dashboard
+
 **Build Command:**
 ```bash
 pip install -r requirements.txt
@@ -9,8 +14,10 @@ pip install -r requirements.txt
 
 **Start Command:**
 ```bash
-gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app
+gunicorn --worker-class eventlet -w 1 app:app
 ```
+
+**IMPORTANTE:** NO agregues `--bind 0.0.0.0:$PORT` - Render lo maneja automáticamente.
 
 ## 🔐 Variables de Entorno Requeridas
 
